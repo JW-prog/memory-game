@@ -14,7 +14,7 @@ function game() {
     if (!element.innerHTML.includes(`id="${id}"`)) return null;
     if (!cardElements.has(id)) {
       const classes = new Set();
-      cardElements.set(id, { disabled: false, setAttribute() {}, addEventListener() {}, classList: {
+      cardElements.set(id, { disabled: false, open: false, showModal() { this.open = true; }, close() { this.open = false; }, setAttribute() {}, addEventListener() {}, classList: {
         toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); },
         contains(name) { return classes.has(name); },
       } });
@@ -39,14 +39,21 @@ test('Every size and theme contains exactly two cards per motif', () => {
   }
 });
 
-test('Image paths exist and the selected theme renders image cards', () => {
+test('Image paths preserve equals signs and the selected theme renders image cards', () => {
   const app = game();
+  assert.equal(app.run('asset("Property 1=Component 22 (1).png")'), '/projects/memory-game/assets/Property%201=Component%2022%20(1).png');
   for (const theme of ['coding', 'gaming']) {
     app.run(`theme = '${theme}'; startGame()`);
     const html = app.run('root.innerHTML');
-    assert.ok(html.includes(`image-window ${theme} back`));
-    assert.ok(html.includes(`image-window ${theme} front`));
-    assert.ok(html.includes('Platzhalter'));
+    assert.ok(html.includes('single-card-image'));
+    if (theme === 'gaming') {
+      assert.ok(html.includes('image-window gaming front'));
+      assert.ok(html.includes('Platzhalter'));
+    } else {
+      assert.equal(html.includes('Platzhalter'), false);
+      assert.equal(app.run('themes.coding.motifs.length'), 18);
+      assert.equal(app.run('themes.coding.motifs.every(motif => motif.file && motif.standalone)'), true);
+    }
     for (const match of html.matchAll(/src="([^"]+)"/g)) {
       const path = decodeURIComponent(match[1]).replace('/projects/memory-game/', 'public/');
       assert.ok(fs.existsSync(path), match[1]);
@@ -65,6 +72,17 @@ test('Cards flip through their IDs and turn back after a mismatch', () => {
   app.tick();
   assert.equal(app.run('document.getElementById("card-0").classList.contains("flipped")'), false);
   assert.equal(app.run('document.getElementById("card-1").classList.contains("flipped")'), false);
+});
+
+test('Exit confirmation preserves the current round when returning to the game', () => {
+  const app = game();
+  app.run('startGame(); flipCard(0); scores = [2, 1]; showExitDialog()');
+  assert.equal(app.run('document.getElementById("exit-dialog").open'), true);
+  app.run('document.getElementById("exit-dialog").close()');
+  assert.equal(app.run('document.getElementById("exit-dialog").open'), false);
+  assert.equal(app.run('opened[0]'), 0);
+  assert.equal(app.run('scores[0]'), 2);
+  assert.equal(app.run('document.body.dataset.page'), 'game');
 });
 
 test('Matching, turn switching, duplicate clicks and input locking', () => {
@@ -100,8 +118,8 @@ test('Game over precedes the winner screen; ties and restart work', () => {
   assert.equal(app.run('document.body.dataset.page'), 'result');
   assert.equal(app.run('root.innerHTML.includes("Final score")'), true);
   assert.equal(app.run('root.innerHTML.includes("The winner is")'), false);
-  assert.equal(app.run('root.innerHTML.includes("Blue <strong>5</strong>")'), true);
-  assert.equal(app.run('root.innerHTML.includes("Orange <strong>3</strong>")'), true);
+  assert.equal(app.run('root.innerHTML.includes("Blue: 5 Paare")'), true);
+  assert.equal(app.run('root.innerHTML.includes("Orange: 3 Paare")'), true);
   assert.equal(app.run('showWinner(); root.innerHTML.includes("Blau gewinnt!")'), true);
   assert.equal(app.run('document.body.dataset.page'), 'winner');
   assert.equal(app.run('scores = [3, 5]; showWinner(); root.innerHTML.includes("Orange gewinnt!")'), true);
