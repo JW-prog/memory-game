@@ -126,6 +126,8 @@ test('Game over precedes the winner screen; ties and restart work', () => {
   assert.equal(app.run('scores = [3, 5]; showWinner(); root.innerHTML.includes("Orange gewinnt!")'), true);
   assert.equal(app.run('scores = [4, 4]; showWinner(); root.innerHTML.includes("Unentschieden!")'), true);
   app.run('startGame()');
+  app.tick(); // The previous round's delayed result must not interrupt the new game.
+  assert.equal(app.run('document.body.dataset.page'), 'game');
   assert.equal(app.run('scores[0] + scores[1] + moves'), 0);
   app.run('cards = [{value: "a", matched: false}, {value: "a", matched: false}]; flipCard(0); flipCard(1)');
   app.tick();
@@ -135,3 +137,49 @@ test('Game over precedes the winner screen; ties and restart work', () => {
 
 
 
+
+test('All screens resolve their images with exact filename casing in both themes', () => {
+  for (const theme of ['coding', 'gaming']) {
+    const app = game();
+    app.run(`theme = '${theme}'`);
+    const screens = ['home()', 'settings()', 'startGame()', 'finishGame()',
+      'scores = [5, 3]; showWinner()', 'scores = [3, 5]; showWinner()',
+      'scores = [4, 4]; showWinner()'];
+    for (const screen of screens) {
+      app.run(screen);
+      for (const match of app.run('root.innerHTML').matchAll(/src="([^"]+)"/g)) {
+        const path = decodeURIComponent(match[1]).replace('/projects/memory-game/', 'public/');
+        const paths = require('node:path');
+        assert.ok(fs.existsSync(path), `${theme}: ${screen}: ${path}`);
+        assert.ok(fs.readdirSync(paths.dirname(path)).includes(paths.basename(path)), path);
+      }
+    }
+  }
+});
+
+test('Gaming results keep Home navigation without confetti or a direct restart button', () => {
+  const app = game();
+  app.run("theme = 'gaming'");
+  for (const scores of [[5, 3], [3, 5], [4, 4]]) {
+    app.run(`scores = ${JSON.stringify(scores)}; showWinner()`);
+    const html = app.run('root.innerHTML');
+    assert.ok(html.includes('id="back-to-start"'));
+    assert.equal(html.includes('id="again"'), false);
+    assert.equal(html.includes('class="confetti"'), false);
+  }
+  app.run('home(); settings(); startGame()');
+  assert.equal(app.run('document.body.dataset.page'), 'game');
+  assert.equal(app.run('scores[0] + scores[1] + moves'), 0);
+});
+
+test('Game over advances automatically without a Continue button in both themes', () => {
+  for (const theme of ['coding', 'gaming']) {
+    const app = game();
+    app.run(`theme = '${theme}'; scores = [5, 3]; finishGame()`);
+    assert.equal(app.run('document.body.dataset.page'), 'result');
+    assert.equal(app.run(`root.innerHTML.includes('id="show-winner"')`), false);
+    app.tick();
+    assert.equal(app.run('document.body.dataset.page'), 'winner');
+    assert.ok(app.run('root.innerHTML.includes("Blau gewinnt!")'));
+  }
+});

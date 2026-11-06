@@ -327,3 +327,9 @@ body[data-theme='gaming'] .preview-bar .current-player-marker { height: 14px; }
 .winner-home-button { display: block; padding: 0; background: transparent; }
 .winner-home-button img { display: block; width: 124px; height: auto; }
 .winner-home-button:hover { filter: brightness(1.08); }
+
+body[data-theme='gaming'] .mini-scores { gap: 30px; }
+
+.preview-player-score { display: inline-flex; align-items: center; gap: 5px; }
+
+body[data-theme='gaming'][data-page='winner'] { background: #274e5d; }
