@@ -12,9 +12,9 @@ Die Spielfeldgrößen sind wählbare Varianten, keine automatisch aufeinanderfol
 
 ## Noch benötigte Bilder
 
-Die gelieferten Kartenkomponenten und Konfetti sind eingebunden. Code vibes hat jetzt 18 eigene Coding-Motive und ist bis 36 Karten vollständig bebildert. Gaming hat zwei Motive; dafür fehlen noch 16. Nummerierte Platzhalter ermöglichen vorerst alle Größen. Ideal: einzelne quadratische Motive als PNG, WebP oder SVG, etwa 256 × 256 Pixel. Kleinere Dateien sind aktuell nicht nötig.
+Code vibes und Gaming haben jeweils 18 eigene Motive und sind bis 36 Karten vollst?ndig bebildert. Gaming verwendet die neuen einzelnen Kartenexporte und eine Match-Grafik f?r das Kreis-Motiv. Der Gaming-Abbruchdialog verwendet die pinken Buttons mit Hover-Zust?nden.
 
-Die Gewinnerfigur verwendet vorläufig ein skalierbares Schachbauern-Zeichen. Eine separate Gewinnerfigur und gegebenenfalls eine Unentschieden-Grafik können nach Lieferung eingebaut werden. Die Vorschau ist aus bedienbarer Oberfläche und den vorhandenen Karten zusammengesetzt. Nicht verwendete PNG-Exporte wurden entfernt; die benötigten Kartenbilder, der Play-Button, Controller und Konfetti bleiben erhalten.
+Die Gewinneranzeige verwendet Player.png, bei Unentschieden Scale_Icon.png. Die Vorschau wird aus der Oberfl?che und den vorhandenen Karten zusammengesetzt. Ungenutzte und ersetzte PNG-Exporte wurden aus public/assets entfernt.
 
 ## Start und Prüfung
 
@@ -31,5 +31,4 @@ Responsive Darstellung, Tastatursteuerung, Screenreader-Beschriftungen, Unterst�
 Das Projekt ist lokal, nicht eingereicht oder veröffentlicht.
 
 
-Beim Verlassen des Spiels erscheint eine Rückfrage. Der gelieferte Back-to-game-Button mit Hover-Grafik führt zur laufenden Runde zurück. Kartenrückseiten verwenden jetzt die einzelnen Exporte. Angular Icon 1.png und Exit game.png sind zusätzliche Einzelexporte bereits enthaltener Motive bzw. Beschriftungen und bleiben als Vorlagen erhalten.
-
+Beim Verlassen des Spiels erscheint eine R?ckfrage. Pop up button.png f?hrt zur laufenden Runde zur?ck; Exit game dialog.png best?tigt den Abbruch. Kartenr?ckseiten verwenden die einzelnen Exporte.

@@ -47,8 +47,9 @@ test('Image paths preserve equals signs and the selected theme renders image car
     const html = app.run('root.innerHTML');
     assert.ok(html.includes('single-card-image'));
     if (theme === 'gaming') {
-      assert.ok(html.includes('image-window gaming front'));
-      assert.ok(html.includes('Platzhalter'));
+      assert.ok(html.includes('Property%201=Component%202')); 
+      assert.equal(html.includes('Platzhalter'), false);
+      assert.equal(app.run('themes.gaming.motifs.length'), 18);
     } else {
       assert.equal(html.includes('Platzhalter'), false);
       assert.equal(app.run('themes.coding.motifs.length'), 18);
