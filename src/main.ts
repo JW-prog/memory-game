@@ -123,22 +123,12 @@ function themeOptionsMarkup(): string {
       <circle cx="6.8" cy="14.5" r=".8"/>
       </svg>Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
       <input type="radio" name="theme" value="${value}" ${theme === value ? 'checked' : ''}>
-      <span class="theme-option-art">
-      <img src="${asset(value === 'coding' ? 'Radial buttons.png' : 'Radial buttons (1).png')}" alt="${themes[value].name} theme">
-      </span>
+      <span class="theme-name">${themes[value].name}</span>
+      ${theme === value ? `<img class="selected-theme-line" src="${asset('Line 3.png')}" alt="">` : ''}
       </label>`).join('')}<label class="radio-option unavailable">
-      <input type="radio" name="theme" disabled>
-      <span class="theme-option-art">
-      <img src="${asset('Radial buttons (2).png')}" alt="DA Projects theme">
-      </span>
-      <small>folgt</small>
-      </label>
-      <label class="radio-option unavailable">
-      <input type="radio" name="theme" disabled>
-      <span class="theme-option-art">
-      <img src="${asset('Radial buttons (3).png')}" alt="Foods theme">
-      </span>
-      <small>folgt</small>
+      <input type="radio" name="theme" disabled><span>DA Projects</span><small>folgt</small>
+      </label><label class="radio-option unavailable">
+      <input type="radio" name="theme" disabled><span>Foods</span><small>folgt</small>
       </label>
       </fieldset>`;
 }
@@ -163,30 +153,24 @@ function settings(): void {
   round++;
   shell(`<section class="settings">
       <h1>
-      <img class="settings-title" src="${asset('Settings.png')}" alt="Settings">
+      Settings
       </h1>
       <div class="settings-layout">
       <div class="settings-options">
       ${themeOptionsMarkup()}
       ${playerOptionsMarkup()}
       ${boardOptionsMarkup()}
-      <button class="text-button" id="back">&larr; Home</button>
       </div>
       <div class="settings-visual">
       <div class="settings-preview" aria-label="Vorschau des gewählten Themes">
       <div class="preview-bar">
-      <span class="mini-scores">${theme === 'gaming' ? `<span class="preview-player-score">${playerPawn(0)}<strong class="blue-text">0</strong>
-      </span>
-      <span class="preview-player-score">${playerPawn(1)}<strong class="orange-text">0</strong>
-      </span>` : `${scorePlayerLabel(0)} ${scorePlayerLabel(1)}`}</span>
-      <span class="current-player">${currentPlayerMarkup(firstPlayer)}</span>
-      <span class="preview-exit">${exitMarkup()}</span>
+      <span class="mini-scores">${theme === 'gaming' ? `<span class="preview-player-score orange-text">${playerPawn(1)}<strong>6</strong></span><span class="preview-player-score blue-text">${playerPawn(0)}<strong>2</strong></span>` : `<img class="settings-score-art" src="${asset('Frame 565 (1).png')}" alt="Punktevorschau: Blue 0, Orange 6">`}</span>
+      <span class="current-player"><span class="settings-current-player-label">Current player:</span>${theme === 'gaming' ? `<span class="gaming-current-pawn ${firstPlayer === 0 ? 'blue' : 'orange'}">${playerPawn(firstPlayer)}</span>` : `<img class="settings-player-label" src="${asset('label.png')}" alt="Blue">`}</span>
+      <button type="button" class="preview-exit" id="settings-exit"><img class="settings-exit-icon" src="${asset('move_item.png')}" alt=""><span class="settings-exit-label">Exit game</span></button>
       </div>
       <div class="preview-cards">
-      <div class="preview-back exported-preview">
-      <img src="${asset(theme === 'coding' ? 'Cards 5.png' : 'Rectangle 40.png')}" alt="${themes[theme].name} Kartenrückseite">
-      </div>
-      <div class="preview-front ${theme === 'gaming' ? 'exported-preview' : ''}">${theme === 'gaming' ? `<img src="${asset('Front (5).png')}" alt="Gaming-Karte mit bunten Würfeln">` : motifFace(themes[theme].motifs[0].name)}</div>
+      <div class="preview-back">${cardImage(themes[theme].back, 'back', true)}</div>
+      <div class="preview-front">${motifFace(themes[theme].motifs[theme === 'gaming' ? 6 : 0].name)}</div>
       </div>
       </div>
       <div class="settings-summary">
@@ -201,22 +185,22 @@ function settings(): void {
       <i>
       </i>
       <span>
-      <img class="summary-label" src="${asset('Board size.png')}" alt="Board size">
+      <span class="summary-label">Board size</span>
       <strong>${size} cards</strong>
       </span>
       <button class="primary settings-start" id="play">
       <img class="start-icon" src="${asset('smart_display.png')}" alt="">
-      <img class="start-label" src="${asset('Start.png')}" alt="Start">
+      <span>Start</span>
       </button>
       </div>
-      <p class="asset-note">${theme === 'coding' ? 'Alle 18 Coding-Motive sind vorhanden.' : 'Alle 18 Gaming-Motive sind vorhanden.'}</p>
+      
       </div>
       </div>
       </section>`, 'settings');
   root.querySelectorAll<HTMLInputElement>('input[name="theme"]').forEach(input => input.addEventListener('change', () => { theme = input.value as Theme; settings(); restoreOption('theme', input.value); }));
   root.querySelectorAll<HTMLInputElement>('input[name="player"]').forEach(input => input.addEventListener('change', () => { firstPlayer = Number(input.value) as Player; settings(); restoreOption('player', input.value); }));
   root.querySelectorAll<HTMLInputElement>('input[name="size"]').forEach(input => input.addEventListener('change', () => { size = Number(input.value) as BoardSize; settings(); restoreOption('size', input.value); }));
-  document.querySelector('#back')?.addEventListener('click', () => { home(); focusHeading(); });
+  document.querySelector('#settings-exit')?.addEventListener('click', () => { home(); focusHeading(); });
   document.querySelector('#play')?.addEventListener('click', startGame);
 }
 function restoreOption(name: string, value: string): void {
@@ -255,14 +239,10 @@ function startGame(): void {
       </button>`).join('')}</div>
       <dialog id="exit-dialog" class="exit-dialog" aria-labelledby="exit-title">
       <h2 id="exit-title">
-      <img class="exit-question" src="${asset('Are you sure you want to quit the game_.png')}" alt="Are you sure you want to quit the game?">
+      Are you sure you want to quit the game?
       </h2>
-      <button class="back-to-game" id="resume-game" aria-label="Back to game">
-      <img class="back-default" src="${asset(theme === 'gaming' ? 'Property 1=default.png' : 'Pop up button.png')}" alt="">
-      <img class="back-hover pink-back-label" src="${asset('No, back to game.png')}" alt="">
-      </button>
-      <button class="confirm-exit" id="confirm-exit">${theme === 'gaming' ? `<img class="pink-exit-default" src="${asset('Exit game pink.png')}" alt="Exit game">
-      <img class="pink-exit-hover" src="${asset('Exit game pink hover.png')}" alt="">` : `<img class="dialog-exit-label" src="${asset('Exit game dialog.png')}" alt="Exit game">`}</button>
+      <button class="back-to-game" id="resume-game">No, back to game</button>
+      <button class="confirm-exit" id="confirm-exit">Exit game</button>
       </dialog>
       </section>`, 'game');
   document.querySelector('#exit')?.addEventListener('click', showExitDialog);
@@ -279,12 +259,12 @@ function playerPawn(value: Player): string {
   return `<img class="player-pawn ${value === 0 ? 'blue' : 'orange'}" src="${asset('Player.png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
 }
 function currentPlayerMarkup(value: Player): string {
-  return `<img class="current-player-label" src="${asset('Current player_ (1).png')}" alt="Current player:">
-      <img class="current-player-marker ${value === 0 ? 'blue' : 'orange'}" src="${asset(theme === 'gaming' ? 'Frame 614.png' : 'Frame 563.png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
+  return `<span class="game-current-player-label">Current player:</span><img class="game-player-label" src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
 }
 function exitMarkup(): string {
-  return `<img class="exit-button-art" src="${asset('secondary button (1).png')}" alt="Exit game">`;
+  return `<img class="game-exit-icon" src="${asset('move_item.png')}" alt=""><span class="game-exit-label">Exit game</span>`;
 }
+
 function updateBoard(): void {
   const scoreboard = root.querySelector('.scoreboard');
   if (!scoreboard) return;
@@ -325,27 +305,22 @@ function flipCard(index: number): void {
   }, match ? 450 : 1100);
 }
 function scorePlayerLabel(value: Player): string {
-  if (theme === 'gaming') return playerPawn(value);
-  return `<span class="score-player-art ${value === 0 ? 'blue' : 'orange'}">
-      <img src="${asset(value === 0 ? 'Frame 552.png' : 'Frame 551.png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">
-      </span>`;
+  return `<span class="score-name ${value === 0 ? 'blue' : 'orange'}-text">${value === 0 ? 'Blue' : 'Orange'}</span>`;
 }
 function scoreMarkup(): string {
-  if (theme === 'gaming') return `<span class="gaming-scoreboard">${([0, 1] as const).map(value => `<span class="final-player-score">${playerPawn(value)}<strong class="${value === 0 ? 'blue' : 'orange'}-text" aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong>
-      </span>`).join('')}</span>`;
-  return `<span class="live-score-strip">
-      <img src="${asset('Frame 565 (1).png')}" alt="">
-      <strong class="live-score blue-text" aria-label="Blue: ${scores[0]} Paare">${scores[0]}</strong>
-      <strong class="live-score orange-text" aria-label="Orange: ${scores[1]} Paare">${scores[1]}</strong>
+  if (theme === 'coding') return `<span class="png-scoreboard">
+      ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
       </span>`;
+  return `<span class="text-scoreboard">${([0, 1] as const).map(value => `<span class="final-player-score">${scorePlayerLabel(value)}<strong class="${value === 0 ? 'blue' : 'orange'}-text" aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}</span>`;
 }
+
 function finishGame(): void {
   shell(`<section class="result game-over">
       <h1>
-      <img src="${asset(theme === 'gaming' ? 'Gaming game over.png' : 'game over.png')}" alt="Game over">
+      Game over
       </h1>
       <p>
-      <img class="final-score-label" src="${asset('Final score.png')}" alt="Final score">
+      <span class="final-score-label">Final score</span>
       </p>
       <div class="final-score">${theme === 'gaming' ? `<span class="gaming-final-scores">
       <span class="final-player-score">${playerPawn(0)}<strong class="blue-text" aria-label="Blue: ${scores[0]} Paare">${scores[0]}</strong>
@@ -366,15 +341,15 @@ function showWinner(): void {
   const draw = scores[0] === scores[1];
   const color = scores[0] > scores[1] ? 'blue' : 'orange';
   const winner = draw ? 'Unentschieden!' : `${color === 'blue' ? 'Blau' : 'Orange'} gewinnt!`;
-  shell(`<section class="result winner-screen">${theme === 'gaming' ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="">`}${theme === 'gaming' && draw ? '' : `<p class="winner-kicker">
+  shell(`<section class="result winner-screen">${theme === 'gaming' ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="">`}<p class="winner-kicker">
       <img src="${asset(draw ? 'It’s a.png' : 'The winner is.png')}" alt="${draw ? "It's a" : 'The winner is'}">
-      </p>`}<h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
-      <img class="winner-title-art" src="${asset(draw ? 'DRAW.png' : color === 'blue' ? 'Blue Player.png' : 'Orange Player.png')}" alt="${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}">
+      </p><h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
+      ${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}
       </h1>
-      <span class="winner-symbol ${draw ? 'draw-text' : color + '-text'}" aria-hidden="true">${draw ? `<img class="draw-symbol" src="${asset('Scale_Icon.png')}" alt="">` : `<img class="winner-trophy" src="${asset('pockal 1.png')}" alt="">`}</span>
+      <span class="winner-symbol ${draw ? 'draw-text' : color + '-text'}" aria-hidden="true">${draw ? `<span class="coding-draw-art" style="mask-image: url('${asset('Scale_Icon.png')}')"><img class="draw-symbol" src="${asset('Scale_Icon.png')}" alt=""></span>` : theme === 'gaming' ? `<img class="winner-trophy" src="${asset('pockal 1.png')}" alt="">` : playerPawn(color === 'blue' ? 0 : 1)}</span>
       <div class="winner-actions">
-      <button class="winner-home-button" id="back-to-start">
-      <img src="${asset('game theme.png')}" alt="Home">
+      <button class="winner-home-button result-home" id="back-to-start">
+      <img src="${asset(theme === 'gaming' ? 'result-home.png' : 'secondary button (2).png')}" alt="${theme === 'gaming' ? 'Home' : 'Back to start'}">
       </button>${theme === 'gaming' ? '' : '<button class="text-button" id="again">Noch eine Runde</button>'}</div>
       </section>`, 'winner');
   document.getElementById('back-to-start')?.addEventListener('click', () => { home(); focusHeading(); });

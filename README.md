@@ -25,3 +25,7 @@ Die gewaehlte Farbe bestimmt den Startspieler. Ein Paar gibt einen Punkt und ein
 Build, TypeScript-Pruefung und alle zehn Tests erfolgreich. Die Tests verwenden eine DOM-Nachbildung. Visueller Browsertest und Abgleich mit den konkreten HTML-/TypeScript-Kursrichtlinien stehen aus; diese Richtlinien liegen im Projekt nicht vor.
 
 Das Projekt wurde nicht eingereicht oder veroeffentlicht.
+
+## Anpassungen aus dem Review
+
+Bedienelemente, Theme-Auswahl, Punktestand und Ergebnis?berschriften verwenden echten Text. Die Einstellungen haben mindestens 16 Pixel gro?e Beschriftungen und zeigen die tats?chlichen Karten des gew?hlten Themes. Hover- und Fokuseffekte sowie Animationen f?r Game over, Gewinner und Unentschieden sind erg?nzt; reduzierte Bewegung wird ber?cksichtigt. Auf der Startseite ist eine gelbe Akzentleiste erg?nzt. Die genaue Position des im Transkript erw?hnten Balkens muss noch mit dem Video oder der Vorlage abgeglichen werden.
