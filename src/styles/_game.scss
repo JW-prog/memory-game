@@ -1,0 +1,215 @@
+/* Game */
+body[data-page='game'], body[data-page='result'], body[data-page='winner'] {
+  background: #303232;
+  color: #fff;
+}
+body[data-page='game'][data-theme='gaming'] {
+  background: #274e5d;
+  color: #fff;
+}
+.game {
+  min-height: 100svh;
+}
+.game-toolbar {
+  display: grid;
+  align-items: center;
+}
+.scoreboard, .final-score {
+  display: inline-flex;
+  gap: 8px;
+  background: #4a6e6866;
+  padding: 10px;
+  width: fit-content;
+}
+.score-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+}
+.score-chip img {
+  height: 15px;
+  width: auto;
+}
+.score-chip strong {
+  margin-left: 2px;
+}
+.current-player {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+}
+.exit-button, .result-button {
+  border: 1px solid #80b4aa;
+  background: #547b725e;
+  color: inherit;
+  padding: 10px 18px;
+}
+.exit-button {
+  justify-self: end;
+}
+.board {
+  display: grid;
+  gap: 8px;
+  margin: 36px auto 0;
+  width: min(55vw, 68svh, 660px);
+}
+.four {
+  grid-template-columns: repeat(4, 1fr);
+  width: min(40vw, 54svh, 480px);
+}
+.six {
+  grid-template-columns: repeat(6, 1fr);
+}
+.card {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  padding: 0;
+  background: transparent;
+  perspective: 800px;
+  border-radius: 2px;
+}
+.card-inner {
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.card-back, .card-front {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform .45s cubic-bezier(.2,.7,.3,1), visibility 0s .225s;
+}
+.card-back {
+  transform: rotateY(0deg);
+  visibility: visible;
+}
+.card-front {
+  background: var(--card);
+  transform: rotateY(180deg);
+  visibility: hidden;
+}
+.flipped .card-back {
+  transform: rotateY(-180deg);
+  visibility: hidden;
+}
+.flipped .card-front {
+  transform: rotateY(0deg);
+  visibility: visible;
+}
+.matched .card-front {
+  opacity: .6;
+}
+.card:not(.flipped):hover .card-back {
+  filter: brightness(1.15);
+}
+.image-window {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.image-window img {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+.single-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.single-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+.exit-dialog {
+  text-align: center;
+}
+.exit-dialog::backdrop {
+  background: #0009;
+}
+.exit-dialog p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.back-to-game {
+  position: relative;
+  display: block;
+  width: 182px;
+  max-width: 100%;
+  margin: 24px auto 15px;
+  padding: 0;
+  background: transparent;
+}
+.back-to-game img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.back-hover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.back-to-game:hover .back-hover, .back-to-game:focus-visible .back-hover {
+  opacity: 1;
+}
+.confirm-exit {
+  background: transparent;
+  color: #fff;
+  padding: 10px 18px;
+  text-decoration: underline;
+}
+/* The supplied component images contain a back above a front. */
+.image-window.coding img {
+  width: 133.333333%;
+  height: 251.666667%;
+  left: -16.666667%;
+}
+.image-window.coding.back img {
+  top: -16.666667%;
+}
+.image-window.coding.front img {
+  top: -135%;
+}
+.image-window.gaming img {
+  width: 138.095238%;
+  height: 250%;
+  left: -19.047619%;
+}
+.image-window.gaming.back img {
+  top: -16.666667%;
+}
+.image-window.gaming.front img {
+  top: -133.333333%;
+}
+.placeholder-motif {
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  color: #303232;
+  text-align: center;
+}
+.placeholder-motif strong {
+  font-size: clamp(20px, 4vw, 40px);
+}
+.placeholder-motif small {
+  font-size: clamp(7px, 1.4vw, 12px);
+}

@@ -1,0 +1,176 @@
+/* Stable live settings: reserve decoration space and expose selected values. */
+.settings h1::before, .settings h1::after { background: var(--accent); }
+.selected-theme-line { visibility: hidden; }
+.radio-option:has(input:checked) .selected-theme-line,
+.radio-option:hover .selected-theme-line { visibility: visible; }
+.settings-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) 6px minmax(0, .8fr) 6px minmax(0, 1.2fr) 112px;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 0;
+}
+.settings-summary > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.settings-summary i {
+  margin-inline: 0;
+  width: 6px;
+}
+.settings-summary strong {
+  display: block;
+  min-height: 1.3em;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #525454;
+}
+.settings-summary i { background: var(--yellow); }
+.settings-preview .preview-cards > div { animation: none; }
+.settings-preview .game-current-player-label { font-size: 10px; }
+.settings-preview .game-player-label { height: 10px; }
+.settings-preview .preview-bar { min-height: 38px; }
+.home-content h1 {
+  font: 700 clamp(36px, 7.4vw, 108px)/1.1 'Red Rose', sans-serif;
+  letter-spacing: -.045em;
+}
+.game-title {
+  margin: 0 0 20px;
+  color: var(--accent);
+  font: 700 clamp(16px, 2vw, 24px)/1.3 'Red Rose', sans-serif;
+  text-align: center;
+}
+/* Keep content visible as the entrance motion settles. */
+@keyframes result-enter {
+  from { opacity: .45; transform: translateY(18px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes trophy-enter {
+  from { opacity: .45; transform: translateY(25px) scale(.8) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+.winner-screen h1, .winner-actions { animation-delay: 0s; }
+.card-back, .card-front {
+  transition: transform .55s cubic-bezier(.2,.7,.3,1);
+  visibility: visible;
+}
+.flipped .card-back, .card-front, .flipped .card-front { visibility: visible; }
+@media (max-width: 500px) {
+  .settings-summary { column-gap: 6px; padding-inline: 10px; }
+  .settings-summary > span, .settings-summary .summary-label { font-size: 14px; }
+
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.radio-option:not(.unavailable):hover { background: #4bd0bc22; }
+.radio-option:not(.unavailable)::after { content: '\2192'; color: var(--accent); }
+.settings-preview .mini-scores { padding: 4px; }
+.settings-preview .score-entry { font-size: 9px; gap: 3px; }
+.settings-preview .score-entry > img { display: none; }
+
+
+/* Start button proportions and colors from the settings reference. */
+.settings-summary .settings-start {
+  flex: 0 0 112px;
+  width: 112px;
+  min-width: 112px;
+  height: 48px;
+  padding: 14px 16px;
+  gap: 8px;
+  border: 0;
+  border-radius: 0;
+  background: var(--yellow);
+  color: #303232;
+}
+.settings-summary .settings-start .start-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) opacity(.8);
+}
+.settings-summary .settings-start .start-label {
+  width: 54px;
+  height: auto;
+  filter: brightness(0) opacity(.8);
+}
+
+/* Compact Gaming settings toolbar, matching the preview reference. */
+body[data-theme='gaming'] .settings-preview .preview-bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 37px;
+  padding: 7px 14px;
+  gap: 10px;
+  border-radius: 10px;
+  font: 700 9px/1.2 'Red Rose', sans-serif;
+}
+body[data-theme='gaming'] .settings-preview .preview-bar .mini-scores {
+  gap: 14px;
+  padding: 4px 7px;
+  border-radius: 3px;
+  background: #fff;
+}
+body[data-theme='gaming'] .settings-preview .preview-player-score {
+  gap: 4px;
+  font: 700 11px/1 'Red Rose', sans-serif;
+}
+body[data-theme='gaming'] .settings-preview .preview-player-score .player-pawn {
+  height: 12px;
+  width: auto;
+}
+body[data-theme='gaming'] .settings-preview .preview-bar .current-player {
+  min-width: 0;
+  gap: 5px;
+  font-size: 9px;
+}
+body[data-theme='gaming'] .settings-preview .preview-bar .settings-current-player-label {
+  font: 700 9px/1.2 'Red Rose', sans-serif;
+}
+body[data-theme='gaming'] .settings-preview .gaming-current-pawn {
+  width: 15px;
+  height: 16px;
+}
+body[data-theme='gaming'] .settings-preview .preview-bar .preview-exit {
+  min-height: 20px;
+  padding: 3px 7px;
+  gap: 6px;
+  border-radius: 7px;
+}
+body[data-theme='gaming'] .settings-preview .preview-bar .settings-exit-label {
+  font: 700 9px/1.2 'Red Rose', sans-serif;
+}
+body[data-theme='gaming'] .settings-preview .settings-exit-icon {
+  height: 11px;
+  width: auto;
+}
+@media (max-width: 380px) {
+  body[data-theme='gaming'] .settings-preview .preview-bar {
+    gap: 5px;
+    padding-inline: 6px;
+  }
+  body[data-theme='gaming'] .settings-preview .preview-bar .mini-scores { gap: 7px; }
+  body[data-theme='gaming'] .settings-preview .preview-bar .settings-current-player-label {
+    max-width: 60px;
+    white-space: normal;
+  }
+}
+
+/* Keep Start immediately after Board size in the same row. */
+.settings-summary > span, .settings-summary .summary-label {
+  white-space: normal;
+  line-height: 1.2;
+}
+.settings-summary .settings-start {
+  grid-column: 6;
+  grid-row: 1;
+  justify-self: end;
+}
+@media (max-width: 600px) {
+  .settings-summary i { display: block; }
+  .settings-summary > span, .settings-summary .summary-label { font-size: 12px; }
+  .settings-summary strong { font-size: 11px; }
+}

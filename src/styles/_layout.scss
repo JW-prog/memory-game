@@ -1,0 +1,215 @@
+@media (max-width: 750px) {
+  .home-content {
+    width: 78%;
+  }
+  .home-kicker img {
+    width: max(27%, 117px);
+  }
+  .home-controller {
+    width: 38%;
+  }
+  .settings-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .settings-options fieldset:first-child {
+    grid-column: 1 / -1;
+  }
+  legend {
+    font-size: 17px;
+  }
+  .radio-option {
+    font-size: 14px;
+    padding-left: 8px;
+  }
+  .radio-option small {
+    font-size: 10px;
+  }
+  .settings-preview {
+    max-width: 480px;
+    margin: auto;
+  }
+  .settings-summary {
+    padding: 10px;
+  }
+  .settings-summary > span {
+    font-size: 11px;
+  }
+  .settings-summary .primary {
+    padding: 12px;
+  }
+  .summary-label {
+    height: 14px;
+  }
+  .settings-start {
+    gap: 6px;
+  }
+  .settings-start .start-label {
+    width: 42px;
+  }
+  .settings-start .start-icon {
+    width: 18px;
+  }
+  .scoreboard {
+    padding: 6px;
+    gap: 5px;
+  }
+  .score-chip, .current-player {
+    font-size: 10px;
+  }
+  .score-chip img {
+    height: 11px;
+  }
+  .exit-button {
+    font-size: 11px;
+    padding: 8px;
+  }
+  .board, .four {
+    width: min(94%, 64svh);
+    gap: 5px;
+  }
+}
+@media (max-width: 380px) {
+  .game-toolbar {
+    grid-template-columns: 1fr auto;
+  }
+  .current-player {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+  .settings-options {
+    grid-template-columns: 1fr;
+  }
+}
+.game-toolbar .current-player .game-current-player-label {
+  font-family: 'Red Rose', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+.game-player-label {
+  display: block;
+  width: auto;
+  height: 14px;
+}
+.game-toolbar .exit-button {
+  color: #fff;
+}
+.game-exit-icon {
+  display: block;
+  width: auto;
+  height: 16px;
+}
+.game-exit-label {
+  font-family: 'Red Rose', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+.game-toolbar .png-scoreboard {
+  width: max-content;
+  min-width: 183px;
+  height: 39px;
+  padding: 8px 12px;
+  background: #3f5953;
+}
+.game-toolbar .png-scoreboard > strong {
+  font-size: 14px;
+}
+.game-toolbar .game-exit-label {
+  white-space: nowrap;
+}
+.settings-preview .preview-bar .preview-exit {
+  border-color: #4dd5bc;
+}
+.exit-dialog {
+  width: min(640px, 94vw);
+  padding: 52px;
+  border: 0;
+  border-radius: 26px;
+  background: #eff7fa;
+  color: #274e5d;
+}
+.exit-dialog h2 {
+  margin: 0 0 64px;
+  font: 700 clamp(22px, 3vw, 32px)/1.4 'Red Rose', sans-serif;
+}
+.exit-dialog-actions {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 26px;
+}
+.exit-dialog .exit-dialog-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  margin: 0;
+  padding: 14px 20px;
+  border: 2px solid #ed1488;
+  border-radius: 12px;
+  font: 700 clamp(12px, 1.8vw, 18px)/1.3 'Red Rose', sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  transform: none;
+  box-shadow: none;
+  transition: filter .2s ease;
+}
+.exit-dialog .exit-dialog-actions .back-to-game {
+  background: #ed1488;
+  color: #fff;
+}
+.exit-dialog .exit-dialog-actions .confirm-exit {
+  background: #f5e8ee;
+  color: #ed1488;
+}
+.exit-dialog .exit-dialog-actions button:hover {
+  filter: brightness(.95);
+}
+body[data-theme='coding'] .exit-dialog {
+  border-radius: 0;
+  background: #fff;
+  color: #303232;
+}
+body[data-theme='coding'] .exit-dialog h2 {
+  font-family: 'Red Rose', sans-serif;
+}
+body[data-theme='coding'] .exit-dialog .exit-dialog-actions button {
+  border-color: #4bd0bc;
+  border-radius: 0;
+  font-family: 'Red Rose', sans-serif;
+}
+body[data-theme='coding'] .exit-dialog .exit-dialog-actions .back-to-game {
+  background: #65cbbb;
+  color: #fff;
+}
+body[data-theme='coding'] .exit-dialog .exit-dialog-actions .confirm-exit {
+  background: #effbf7;
+  color: #36cdb3;
+}
+@media (max-width: 500px) {
+  .exit-dialog {
+    padding: 32px 18px;
+  }
+  .exit-dialog h2 {
+    margin-bottom: 36px;
+  }
+  .exit-dialog-actions {
+    gap: 12px;
+  }
+  .exit-dialog .exit-dialog-actions button {
+    padding: 12px 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

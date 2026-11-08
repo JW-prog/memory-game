@@ -1,0 +1,61 @@
+/* Start screen */
+body[data-page='home'] {
+  background: #303232;
+  color: #fff;
+}
+.home-screen {
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+  background: #303232;
+}
+.home-content {
+  width: min(68%, 973px);
+  text-align: center;
+  position: absolute;
+  top: 33.8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+.home-kicker {
+  margin: 0 0 2.4%;
+  text-align: left;
+  line-height: 1;
+}
+.home-kicker img {
+  display: block;
+  width: 27%;
+  height: auto;
+}
+.home-content h1 {
+  margin: 0 0 10.7%;
+  line-height: 1;
+}
+.home-content h1 img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.home-content .image-button {
+  width: 25.6%;
+  min-width: 110px;
+  margin: 0 auto;
+}
+.home-controller {
+  position: absolute;
+  width: min(32%, 460px);
+  height: auto;
+  left: -5%;
+  bottom: 1%;
+  opacity: .13;
+  transition: transform .35s ease;
+}
+@media (hover: hover) {
+  .home-controller:hover {
+    transform: rotate(-45deg);
+  }
+  .home-content .image-button:hover .home-play-controller {
+    transform: rotate(-45deg);
+  }
+}

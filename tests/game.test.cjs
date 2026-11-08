@@ -8,6 +8,11 @@ function game() {
   const scoreboard = { innerHTML: '' };
   const currentPlayer = { innerHTML: '' };
   const element = { innerHTML: '', textContent: '', dataset: {}, addEventListener() {}, setAttribute() {}, focus() {}, querySelectorAll() { return []; }, querySelector(selector) { return selector === '.scoreboard' ? scoreboard : selector === '.current-player' ? currentPlayer : element; } };
+  const summaries = Array.from({ length: 3 }, () => ({ textContent: '' }));
+  const preview = { innerHTML: '' };
+  element.querySelectorAll = selector => selector === '.settings-summary strong' ? summaries : [];
+  const baseQuery = element.querySelector.bind(element);
+  element.querySelector = selector => selector === '.preview-bar .current-player' ? preview : baseQuery(selector);
   const timers = [];
   const cardElements = new Map();
   const context = vm.createContext({ document: { body: { dataset: {} }, getElementById(id) {
@@ -21,8 +26,11 @@ function game() {
     }
     return cardElements.get(id);
   }, querySelector() { return element; } }, window: { setTimeout(callback) { timers.push(callback); } } });
-  const source = fs.readFileSync('src/main.ts', 'utf8')
-    .replace("import './styles/style.scss';", '')
+  const source = ['types', 'assets', 'themes', 'templates', 'app']
+    .map(name => fs.readFileSync(`src/${name}.ts`, 'utf8'))
+    .join('\n')
+    .replace(/^import [\s\S]*?;\r?$/gm, '')
+    .replace(/^export /gm, '')
     .replaceAll('import.meta.env.BASE_URL', "'/projects/memory-game/'");
   vm.runInContext(stripTypeScriptTypes(source), context);
   return { run: expression => vm.runInContext(expression, context), tick: () => timers.shift()?.() };
@@ -182,4 +190,33 @@ test('Game over advances automatically without a Continue button in both themes'
     assert.equal(app.run('document.body.dataset.page'), 'winner');
     assert.ok(app.run('root.innerHTML.includes("Blau gewinnt!")'));
   }
+});
+
+test('Settings updates preserve the screen and expose the selected player and size', () => {
+  const app = game();
+  app.run('settings(); globalThis.previousScreen = root.innerHTML; firstPlayer = 1; size = 24; refreshSettings()');
+  assert.equal(app.run('root.innerHTML === previousScreen'), true);
+  assert.equal(app.run('root.querySelectorAll(".settings-summary strong")[1].textContent'), 'Orange');
+  assert.equal(app.run('root.querySelectorAll(".settings-summary strong")[2].textContent'), '24 cards');
+  assert.ok(app.run('root.querySelector(".preview-bar .current-player").innerHTML.includes("Orange")'));
+  app.run('startGame()');
+  assert.equal(app.run('cards.length'), 24);
+  assert.equal(app.run('player'), 1);
+});
+
+test('Theme preview restores the committed theme without changing settings', () => {
+  const app = game();
+  app.run('settings(); refreshSettings("gaming")');
+  assert.equal(app.run('document.body.dataset.theme'), 'gaming');
+  assert.equal(app.run('theme'), 'coding');
+  app.run('refreshSettings()');
+  assert.equal(app.run('document.body.dataset.theme'), 'coding');
+});
+
+test('Screen headings use visible text and settings sections have matching tags', () => {
+  const app = game();
+  assert.ok(app.run('homeMarkup().includes("<h1>Ready to play?</h1>")'));
+  const html = app.run('settingsMarkup("coding", 1, 24)');
+  assert.equal((html.match(/<section\b/g) || []).length, (html.match(/<\/section>/g) || []).length);
+  assert.ok(app.run('gameMarkup("coding", 24, [])').includes('class="game-title"'));
 });

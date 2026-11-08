@@ -1,0 +1,230 @@
+/* Settings: radio controls on the left, live card preview on the right. */
+body[data-page='settings'] {
+  background: #fff;
+  color: #303232;
+}
+.settings {
+  margin: auto;
+}
+.settings h1 {
+  position: relative;
+  display: table;
+}
+.settings-title {
+  display: block;
+  width: 225px;
+  max-width: 100%;
+  height: auto;
+}
+.settings h1::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  background: var(--yellow);
+}
+.settings h1::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  background: var(--yellow);
+  transform: rotate(45deg);
+}
+.settings-layout {
+  display: grid;
+  align-items: start;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 35px;
+  min-width: 0;
+}
+legend {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+legend span {
+  display: inline-block;
+  width: 28px;
+  font-size: 28px;
+}
+.theme-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.theme-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: #e92bc0;
+}
+.theme-legend img {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+}
+.board-legend img {
+  display: block;
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+}
+.card-count-label {
+  display: block;
+  font-family: 'Red Rose', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.player-icon {
+  color: #00d6ad;
+}
+.size-icon {
+  color: #1845db;
+}
+.radio-option {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 0 7px 33px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.radio-option input {
+  margin: 0;
+  flex-shrink: 0;
+}
+/* Crop the exported radio and selection arrow; native controls show live state. */
+.theme-option-art {
+  display: block;
+  position: relative;
+  width: 170px;
+  height: 24px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.theme-option-art img {
+  position: absolute;
+  left: -32px;
+  top: 0;
+  height: 24px;
+  width: auto;
+  max-width: none;
+}
+.radio-option:has(input:checked) {
+  font-weight: 400;
+}
+.radio-option:has(input:checked)::after {
+  content: '';
+  color: var(--accent);
+  font-size: 15px;
+  margin-left: 8px;
+}
+.radio-option small {
+  color: #777;
+  font-weight: 400;
+  font-size: 11px;
+}
+.unavailable {
+  opacity: .45;
+  cursor: default;
+}
+.settings-preview {
+  overflow: hidden;
+  color: #fff;
+}
+.preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+}
+.preview-bar > :last-child {
+  border: 1px solid var(--accent);
+  padding: 5px;
+}
+.mini-scores {
+  color: #25b6f6;
+  background: #4a6e68;
+  padding: 5px;
+}
+.preview-cards {
+  width: 100%;
+  position: relative;
+}
+.preview-cards > div {
+  position: absolute;
+  aspect-ratio: 1;
+  box-shadow: 4px 5px 8px #0003;
+}
+.preview-back {
+  left: 12%;
+  transform: rotate(-6deg);
+  z-index: 1;
+}
+.preview-cards .exported-preview {
+  transform: none;
+  box-shadow: none;
+}
+.exported-preview > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.preview-front {
+  right: 7%;
+  transform: rotate(11deg);
+}
+.settings-summary {
+  display: flex;
+  align-items: center;
+  margin-top: 28px;
+}
+.settings-summary > span {
+  font-size: 13px;
+}
+.settings-summary strong {
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: 5px;
+  color: #666;
+}
+.settings-summary i {
+  background: var(--yellow);
+  transform: skew(-20deg);
+}
+.settings-summary .primary {
+  white-space: nowrap;
+}
+.summary-label {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left;
+}
+.settings-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.settings-start .start-icon {
+  width: 22px;
+  height: auto;
+}
+.settings-start .start-label {
+  width: 54px;
+}
+.asset-note {
+  font-size: 11px;
+  color: #777;
+  line-height: 1.5;
+  margin-top: 16px;
+}

@@ -46,3 +46,18 @@ Der Build enthält die strikte TypeScript-Prüfung. Die automatisierten Tests ve
 Die konkreten HTML- und TypeScript-Kursrichtlinien liegen im Projekt nicht vor. Ihre vollständige Einhaltung und eine pixelgenaue Übereinstimmung mit der Original-Designvorgabe sind deshalb nicht bestätigt.
 
 Das Projekt wurde nicht eingereicht oder veröffentlicht.
+
+## Projektstruktur und Anpassungen aus dem Review
+
+- `src/main.ts`: Einstieg und Styles.
+- `src/app.ts`: Navigation, Einstellungen, Rundenablauf und Ereignisse.
+- `src/templates.ts`: HTML-Vorlagen mit expliziten Parametern.
+- `src/types.ts`: gemeinsame Typen.
+- `src/themes.ts`: Themes und Kartenmotive.
+- `src/assets.ts`: Asset-Pfade unter Beachtung des Vite-Basispfads.
+- `src/styles/style.scss`: Einstieg fuer geordnete SCSS-Teilbereiche.
+- `tests/game.test.cjs`: Spielregeln, Asset-Pfade und Einstellungsregressionen; `npm test`.
+
+Die Einstellungen aktualisieren Vorschau und Zusammenfassung ohne Neuaufbau der Seite. Theme-Hover und Tastaturfokus zeigen eine temporaere Vorschau; die Auswahl wird erst durch die Radioauswahl gespeichert. Spieler und Kartenzahl stehen sichtbar in den vorgesehenen Zusammenfassungsfeldern. Die Hauptueberschriften sind sichtbarer Text. Bei Kartenflips entfaellt der zusaetzliche zeitversetzte Sichtbarkeitswechsel; Ergebnisanimationen beginnen mit sichtbarem Inhalt.
+
+Offen fuer den Designabgleich: Das Review-Transkript benennt fehlende Shapes, Icons und ein Video durch Ortsverweise im nicht vorliegenden Video. Ohne diese Referenz ist keine verlaessliche Zuordnung moeglich. Es wurde kein Video erfunden oder hinzugefuegt. Die visuelle Darstellung und Animationen muessen noch im Browser mit der Designvorlage verglichen werden.

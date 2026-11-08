@@ -1,0 +1,66 @@
+/* Separate final-score and winner screens. */
+.result {
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 25svh 20px 50px;
+}
+.game-over h1 {
+  font-size: clamp(48px, 9vw, 120px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  color: var(--accent);
+  margin: 0 0 50px;
+}
+.game-over h1 img {
+  display: block;
+  width: min(75vw, 997px);
+  height: auto;
+  margin: auto;
+}
+.final-score-label {
+  display: block;
+  width: 110px;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+.game-over > p {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.game-over .result-button {
+  display: block;
+  margin: 45px auto 0;
+}
+.confetti {
+  position: absolute;
+  top: 0;
+  left: 6%;
+  width: 88%;
+  height: 27svh;
+  object-fit: contain;
+  object-position: top;
+  pointer-events: none;
+}
+.winner-screen > p {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.winner-screen h1 {
+  font-size: clamp(26px, 4vw, 46px);
+  margin: 0;
+}
+.winner-symbol {
+  font-family: Georgia, serif;
+  font-size: clamp(110px, 20vw, 200px);
+  line-height: 1.2;
+  margin: 18px 0;
+}
+.winner-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
