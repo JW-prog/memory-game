@@ -515,35 +515,44 @@ body[data-theme='gaming'][data-page='winner'] {
 body {
   font-size: 16px;
 }
-.home-screen::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: var(--yellow);
-}
+.home-screen::before { content: none; }
 .home-content .image-button {
+  display: inline-flex;
   justify-content: space-between;
   align-items: center;
   gap: 0;
+  min-width: 110px;
   padding: 0 2.4576%;
   aspect-ratio: 250 / 98;
-  background: #f0ea6e;
+  background: var(--yellow);
+  color: #000;
+  border-radius: 0;
 }
 .home-content .image-button .home-play-controller {
+  display: block;
   width: 21.782%;
+  height: auto;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  overflow: visible;
+  transform-origin: center;
   transition: transform .35s ease;
 }
 .home-content .image-button .home-play-label {
   width: 40.594%;
+  font-family: 'Red Rose', sans-serif;
+  font-size: clamp(18px, 2.8vw, 40px);
+  font-weight: 700;
+  line-height: 1;
+  color: #303232;
+  text-align: center;
 }
 .home-content .image-button .home-play-arrow {
   width: 17.327%;
+  height: auto;
 }
 .home-content .image-button:focus-visible .home-play-controller {
-  transform: rotate(-45deg);
+  transform: rotate(45deg);
 }
 .primary, .winner-home-button, .back-to-game {
   position: relative;

@@ -32,8 +32,12 @@
 .settings-preview .game-player-label { height: 10px; }
 .settings-preview .preview-bar { min-height: 38px; }
 .home-content h1 {
-  font: 700 clamp(36px, 7.4vw, 108px)/1.1 'Red Rose', sans-serif;
-  letter-spacing: -.045em;
+  font-family: 'Red Rose', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 140px;
+  line-height: 100%;
+  letter-spacing: 0;
 }
 .game-title {
   margin: 0 0 20px;
@@ -173,4 +177,39 @@ body[data-theme='gaming'] .settings-preview .settings-exit-icon {
   .settings-summary i { display: block; }
   .settings-summary > span, .settings-summary .summary-label { font-size: 12px; }
   .settings-summary strong { font-size: 11px; }
+}
+
+.home-kicker {
+  font-family: 'Almarai', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 48px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+
+/* Align the headline block with the start-screen reference. */
+.home-content {
+  width: min(68%, 1088px);
+  top: 33.8%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.home-kicker {
+  margin: 0 0 2.4%;
+  text-align: left;
+  font-size: clamp(16px, 3vw, 48px);
+}
+.home-content h1 {
+  margin: 0 0 10.7%;
+  text-align: left;
+  white-space: nowrap;
+  font-size: clamp(28px, 8.75vw, 140px);
+}
+@media (max-width: 480px) {
+  .home-content { width: 86%; }
+  .home-content h1 { font-size: 10.5vw; }
+  .home-kicker { font-size: 4vw; }
 }

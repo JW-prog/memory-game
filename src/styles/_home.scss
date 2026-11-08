@@ -48,14 +48,16 @@ body[data-page='home'] {
   height: auto;
   left: -5%;
   bottom: 1%;
-  opacity: .13;
-  transition: transform .35s ease;
+  opacity: .08;
+  transition: transform .35s ease, filter .35s ease, opacity .35s ease;
 }
 @media (hover: hover) {
   .home-controller:hover {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(66%) sepia(69%) saturate(1583%) hue-rotate(170deg) brightness(101%) contrast(98%) drop-shadow(0 0 16px #38bdf880);
     transform: rotate(-45deg);
   }
   .home-content .image-button:hover .home-play-controller {
-    transform: rotate(-45deg);
+    transform: rotate(45deg);
   }
 }

@@ -92,17 +92,20 @@ export function previewCurrentPlayerMarkup(theme: Theme, value: Player): string 
 export function homeMarkup(): string {
   return `<section class="home-screen">
       <div class="home-content">
-      <p class="home-kicker">
-      <img src="${asset('It’s play time.png')}" alt="It's play time.">
-      </p>
+      <p class="home-kicker">It’s play time.</p>
       <h1>Ready to play?</h1>
       <button class="primary image-button" id="start" aria-label="Play — zu den Einstellungen">
-      <img class="home-play-controller" src="${asset('stadia_controller.png')}" alt="" draggable="false">
-      <img class="home-play-label" src="${asset('Play.png')}" alt="" draggable="false">
+      <svg class="home-play-controller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7.5 5h9c2 0 3.1 1.2 3.6 3.2l1.5 7.6c.5 2.5-1.9 3.7-3.5 1.8L15.5 15h-7l-2.6 2.6c-1.6 1.9-4 .7-3.5-1.8l1.5-7.6C4.4 6.2 5.5 5 7.5 5Z"/>
+        <path d="M7.5 8v5M5 10.5h5"/>
+        <circle cx="16" cy="9" r=".6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="11.5" r=".6" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="home-play-label">Play</span>
       <img class="home-play-arrow" src="${asset('Arrow 1.png')}" alt="" draggable="false">
       </button>
       </div>
-      <img class="controller home-controller" src="${asset('stadia_controller.png')}" alt="Spielcontroller">
+      <img class="controller home-controller" src="${asset('stadia_controller.png')}" alt="Spielcontroller" draggable="false">
       </section>`;
 }
 
