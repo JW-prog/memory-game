@@ -1,31 +1,48 @@
-# Memory
+﻿# Memory
 
-Memory fuer zwei Spieler mit Code vibes und Gaming. Beide Themes bieten 18 Motive und 16, 24 oder 36 Karten. DA Projects und Foods sind deaktivierte Zusatzoptionen.
+Memory für zwei Spieler mit den Themes **Code vibes theme** und **Gaming theme**. Beide Themes bieten 18 Motive sowie 16, 24 oder 36 Karten.
 
-## Start und Pruefung
+## Lokal starten und prüfen
 
-- `npm.cmd run dev`
-- `npm.cmd run build`
-- `node --test tests/game.test.cjs` (Node.js ab 22.13)
+Voraussetzung: Node.js ab 22.13 für die Tests; die aktuelle Vite-Version benötigt Node.js 22.12+ beziehungsweise einen unterstützten neueren Versionszweig.
 
-Startseite -> Settings -> Spielfeld -> Game over mit Punktestand -> nach drei Sekunden automatisch Gewinner oder Unentschieden.
+```sh
+npm.cmd install
+npm.cmd run dev
+npm.cmd run build
+node --test tests/game.test.cjs
+```
 
-Die gewaehlte Farbe bestimmt den Startspieler. Ein Paar gibt einen Punkt und einen weiteren Zug; sonst wechselt der Spieler. Home fuehrt zur Startseite und ermoeglicht eine neue Runde ueber Settings. Code vibes bietet zusaetzlich einen direkten Neustart. Beim Gaming sind Konfetti und direkter Neustart auf Wunsch entfernt.
+Unter macOS und Linux kann `npm` statt `npm.cmd` verwendet werden.
 
-## Extras fuer Mentoren
+## Spielablauf
 
-- Abbruchdialog mit Rueckkehr zum laufenden Spiel.
-- Tastaturbedienung, Fokusfuehrung und Screenreader-Beschriftungen.
-- Responsive Layouts und Unterstuetzung reduzierter Animationen.
-- Gewinner- und Unentschieden-Ansichten mit PNG-Grafiken.
-- Zehn automatisierte Tests fuer Spiellogik, Neustart und Bildpfade aller Ansichten inklusive exakter Dateischreibweise.
+1. Der Play-Button auf der Startseite öffnet die Einstellungen.
+2. Theme, Startspieler (Blau oder Orange) und Kartenzahl auswählen.
+3. Start öffnet das Spielfeld: 4 × 4, 6 × 4 oder 6 × 6 Karten.
+4. Ein gefundenes Paar gibt einen Punkt und einen weiteren Zug. Bei unterschiedlichen Motiven wechselt der Spieler.
+5. Nach dem letzten Paar erscheint „Game over“ mit dem Endpunktestand. Nach drei Sekunden folgt die Gewinner- oder Unentschieden-Ansicht.
+6. Der Home-/Back-to-start-Button führt zur Startseite. Eine neue Runde beginnt über die Einstellungen. Es gibt bei beiden Themes keinen direkten „Noch eine Runde“-Link.
 
-## Pruefstand
+„Exit game“ öffnet einen Bestätigungsdialog. Die Rückkehr zum Spiel erhält den Spielstand; der bestätigte Abbruch öffnet die Einstellungen.
 
-Build, TypeScript-Pruefung und alle zehn Tests erfolgreich. Die Tests verwenden eine DOM-Nachbildung. Visueller Browsertest und Abgleich mit den konkreten HTML-/TypeScript-Kursrichtlinien stehen aus; diese Richtlinien liegen im Projekt nicht vor.
+## Extras für Mentoren
 
-Das Projekt wurde nicht eingereicht oder veroeffentlicht.
+- Bestätigungsdialog beim Verlassen einer laufenden Runde.
+- Eigene Anzeige bei Unentschieden.
+- Animierte Icons auf den Startbuttons und Hover-Effekte auf beiden Kartenvorschauen.
+- Hover-Vorschau der Radiobuttons; die Auswahl ändert sich erst beim Klicken.
+- Konfetti bei Siegen im Code-vibes-Theme.
+- Tastaturbedienung, Fokusführung und Screenreader-Beschriftungen.
+- Responsive Layouts und Unterstützung reduzierter Bewegung.
+- Automatisierte Tests für Spiellogik, Spielende, Neustart und Bildpfade aller Ansichten einschließlich exakter Dateischreibweise.
 
-## Anpassungen aus dem Review
+## Checkliste und Prüfgrenzen
 
-Bedienelemente, Theme-Auswahl, Punktestand und Ergebnis?berschriften verwenden echten Text. Die Einstellungen haben mindestens 16 Pixel gro?e Beschriftungen und zeigen die tats?chlichen Karten des gew?hlten Themes. Hover- und Fokuseffekte sowie Animationen f?r Game over, Gewinner und Unentschieden sind erg?nzt; reduzierte Bewegung wird ber?cksichtigt. Auf der Startseite ist eine gelbe Akzentleiste erg?nzt. Die genaue Position des im Transkript erw?hnten Balkens muss noch mit dem Video oder der Vorlage abgeglichen werden.
+Die funktionalen Anforderungen der fünf User Stories sind im Code umgesetzt: Startseite mit Navigation, zwei Spielerfarben, drei Spielfeldgrößen, zwei Themes mit unterschiedlichen Farben und Motiven, Spielleiste, Kartenanimation, Endpunktestand und Gewinneranzeige. Neue Runden sind über die Startseite möglich.
+
+Der Build enthält die strikte TypeScript-Prüfung. Die automatisierten Tests verwenden eine DOM-Nachbildung; sie prüfen keine tatsächliche Browserdarstellung und keine wahrgenommene Flüssigkeit der Animationen. Ein visueller Abgleich aller Ansichten und Bildschirmgrößen bleibt vor der Abgabe erforderlich.
+
+Die konkreten HTML- und TypeScript-Kursrichtlinien liegen im Projekt nicht vor. Ihre vollständige Einhaltung und eine pixelgenaue Übereinstimmung mit der Original-Designvorgabe sind deshalb nicht bestätigt.
+
+Das Projekt wurde nicht eingereicht oder veröffentlicht.
