@@ -104,8 +104,10 @@ function home(): void {
       <h1>
       <img src="${asset('Ready to play_.svg')}" alt="Ready to play?">
       </h1>
-      <button class="primary image-button" id="start">
-      <img src="${asset('Primary button (1).png')}" alt="Play — zu den Einstellungen">
+      <button class="primary image-button" id="start" aria-label="Play — zu den Einstellungen">
+      <img class="home-play-controller" src="${asset('stadia_controller.png')}" alt="" draggable="false">
+      <img class="home-play-label" src="${asset('Play.png')}" alt="" draggable="false">
+      <img class="home-play-arrow" src="${asset('Arrow 1.png')}" alt="" draggable="false">
       </button>
       </div>
       <img class="controller home-controller" src="${asset('stadia_controller.png')}" alt="Spielcontroller">
@@ -123,13 +125,9 @@ function themeOptionsMarkup(): string {
       <circle cx="6.8" cy="14.5" r=".8"/>
       </svg>Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
       <input type="radio" name="theme" value="${value}" ${theme === value ? 'checked' : ''}>
-      <span class="theme-name">${themes[value].name}</span>
+      <span class="theme-name">${themes[value].name} theme</span>
       ${theme === value ? `<img class="selected-theme-line" src="${asset('Line 3.png')}" alt="">` : ''}
-      </label>`).join('')}<label class="radio-option unavailable">
-      <input type="radio" name="theme" disabled><span>DA Projects</span><small>folgt</small>
-      </label><label class="radio-option unavailable">
-      <input type="radio" name="theme" disabled><span>Foods</span><small>folgt</small>
-      </label>
+      </label>`).join('')}
       </fieldset>`;
 }
 
@@ -188,9 +186,9 @@ function settings(): void {
       <span class="summary-label">Board size</span>
       <strong>${size} cards</strong>
       </span>
-      <button class="primary settings-start" id="play">
-      <img class="start-icon" src="${asset('smart_display.png')}" alt="">
-      <span>Start</span>
+      <button class="primary settings-start" id="play" aria-label="Start">
+      <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
+      <img class="start-label" src="${asset('Start.png')}" alt="" draggable="false">
       </button>
       </div>
       
@@ -241,8 +239,10 @@ function startGame(): void {
       <h2 id="exit-title">
       Are you sure you want to quit the game?
       </h2>
-      <button class="back-to-game" id="resume-game">No, back to game</button>
-      <button class="confirm-exit" id="confirm-exit">Exit game</button>
+      <div class="exit-dialog-actions">
+      <button class="back-to-game" id="resume-game">${theme === 'gaming' ? 'No, back to game' : 'Back to game'}</button>
+      <button class="confirm-exit" id="confirm-exit">${theme === 'gaming' ? 'Yes, quit game' : 'Exit game'}</button>
+      </div>
       </dialog>
       </section>`, 'game');
   document.querySelector('#exit')?.addEventListener('click', showExitDialog);
@@ -341,7 +341,7 @@ function showWinner(): void {
   const draw = scores[0] === scores[1];
   const color = scores[0] > scores[1] ? 'blue' : 'orange';
   const winner = draw ? 'Unentschieden!' : `${color === 'blue' ? 'Blau' : 'Orange'} gewinnt!`;
-  shell(`<section class="result winner-screen">${theme === 'gaming' ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="">`}<p class="winner-kicker">
+  shell(`<section class="result winner-screen">${theme === 'gaming' || draw ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="">`}<p class="winner-kicker">
       <img src="${asset(draw ? 'It’s a.png' : 'The winner is.png')}" alt="${draw ? "It's a" : 'The winner is'}">
       </p><h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
       ${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}
@@ -350,10 +350,9 @@ function showWinner(): void {
       <div class="winner-actions">
       <button class="winner-home-button result-home" id="back-to-start">
       <img src="${asset(theme === 'gaming' ? 'result-home.png' : 'secondary button (2).png')}" alt="${theme === 'gaming' ? 'Home' : 'Back to start'}">
-      </button>${theme === 'gaming' ? '' : '<button class="text-button" id="again">Noch eine Runde</button>'}</div>
+      </button></div>
       </section>`, 'winner');
   document.getElementById('back-to-start')?.addEventListener('click', () => { home(); focusHeading(); });
-  document.getElementById('again')?.addEventListener('click', startGame);
   focusHeading();
 }
 home();
