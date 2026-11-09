@@ -1,5 +1,6 @@
 import type { Theme, ThemeConfig } from './types';
 
+/** Theme registry with 18 distinct motifs per theme, enough for the largest board. */
 export const themes: Record<Theme, ThemeConfig> = {
   coding: {
     name: 'Code vibes', description: 'Türkis, Code und kreative Köpfe.',

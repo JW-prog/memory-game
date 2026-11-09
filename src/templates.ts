@@ -3,7 +3,7 @@ import { themes } from './themes';
 import { asset } from './assets';
 
 /**
- * Render card image.
+ * Render a complete card asset or crop one face from a combined export.
  *
  * @param theme - Theme whose artwork should be rendered.
  * @param file - Exact asset filename including its extension.
@@ -21,7 +21,7 @@ export function cardImage(theme: Theme, file: string, side: 'front' | 'back', st
 }
 
 /**
- * Render motif face.
+ * Look up a motif and render its face, with a text fallback for missing artwork.
  *
  * @param theme - Theme whose artwork should be rendered.
  * @param value - Motif name in the selected theme.
@@ -45,13 +45,7 @@ export function motifFace(theme: Theme, value: string): string {
 export function themeOptionsMarkup(theme: Theme): string {
   return `<fieldset>
       <legend class="theme-legend">
-      <svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 3a9 9 0 1 0 0 18h1.5a2.5 2.5 0 0 0 1.8-4.2 1.4 1.4 0 0 1 1-2.4H18A3 3 0 0 0 21 11c0-4.4-4-8-9-8Z"/>
-      <circle cx="7.5" cy="10" r=".8"/>
-      <circle cx="11" cy="6.8" r=".8"/>
-      <circle cx="15.5" cy="7.5" r=".8"/>
-      <circle cx="6.8" cy="14.5" r=".8"/>
-      </svg>Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
+      ${themeIconMarkup()}Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
       <input type="radio" name="theme" value="${value}" ${theme === value ? 'checked' : ''}>
       <span class="theme-name">${themes[value].name} theme</span>
       <img class="selected-theme-line" src="${asset('Line 3.png')}" alt="">
@@ -141,7 +135,7 @@ export function scoreMarkup(theme: Theme, scores: number[]): string {
 }
 
 /**
- * Render preview scores markup.
+ * Render sample scores for the settings preview, without changing round scores.
  *
  * @param theme - Theme whose artwork should be rendered.
  * @returns HTML markup for this interface element.
@@ -173,16 +167,7 @@ export function homeMarkup(): string {
       <div class="home-content">
       <p class="home-kicker">It’s play time.</p>
       <h1>Ready to play?</h1>
-      <button class="primary image-button" id="start" aria-label="Play — zu den Einstellungen">
-      <svg class="home-play-controller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M7.5 5h9c2 0 3.1 1.2 3.6 3.2l1.5 7.6c.5 2.5-1.9 3.7-3.5 1.8L15.5 15h-7l-2.6 2.6c-1.6 1.9-4 .7-3.5-1.8l1.5-7.6C4.4 6.2 5.5 5 7.5 5Z"/>
-        <path d="M7.5 8v5M5 10.5h5"/>
-        <circle cx="16" cy="9" r=".6" fill="currentColor" stroke="none"/>
-        <circle cx="18" cy="11.5" r=".6" fill="currentColor" stroke="none"/>
-      </svg>
-      <span class="home-play-label">Play</span>
-      <img class="home-play-arrow" src="${asset('Arrow 1.png')}" alt="" draggable="false">
-      </button>
+      ${homePlayButtonMarkup()}
       </div>
       <img class="controller home-controller" src="${asset('stadia_controller.png')}" alt="Spielcontroller" draggable="false">
       </section>`;
@@ -198,17 +183,26 @@ export function homeMarkup(): string {
  */
 export function settingsMarkup(theme: Theme, firstPlayer: Player | null, size: BoardSize | null): string {
   return `<section class="settings">
-      <h1>
-      Settings
-      </h1>
+      <h1>Settings</h1>
       <div class="settings-layout">
-      <section class="settings-options" aria-label="Spieleinstellungen">
-      ${themeOptionsMarkup(theme)}
-      ${playerOptionsMarkup(firstPlayer)}
-      ${boardOptionsMarkup(size)}
-      </section>
-      <div class="settings-visual">
-      <section class="settings-preview" aria-label="Vorschau des gewählten Themes">
+        ${settingsOptionsMarkup(theme, firstPlayer, size)}
+        <div class="settings-visual">
+          ${settingsPreviewMarkup(theme, firstPlayer)}
+          ${settingsSummaryMarkup(theme, firstPlayer, size)}
+        </div>
+      </div>
+    </section>`;
+}
+
+/**
+ * Render the card preview and its sample toolbar independently of the controls.
+ *
+ * @param theme - Theme whose sample cards and toolbar should be shown.
+ * @param firstPlayer - Selected starting player; the sample defaults to blue if unset.
+ * @returns The preview section, including the exit-to-home button.
+ */
+function settingsPreviewMarkup(theme: Theme, firstPlayer: Player | null): string {
+  return `<section class="settings-preview" aria-label="Vorschau des gewählten Themes">
       <div class="preview-bar">
       <span class="mini-scores">${previewScoresMarkup(theme)}</span>
       <span class="current-player">${previewCurrentPlayerMarkup(theme, firstPlayer ?? 0)}</span>
@@ -218,30 +212,25 @@ export function settingsMarkup(theme: Theme, firstPlayer: Player | null, size: B
       <div class="preview-back">${cardImage(theme, themes[theme].back, 'back', true)}</div>
       <div class="preview-front">${motifFace(theme, themes[theme].motifs[theme === 'gaming' ? 6 : 0].name)}</div>
       </div>
-      </section>
-      <section class="settings-summary" aria-label="Gewaehlte Einstellungen" aria-live="polite">
-      <span>Game theme<strong>${themes[theme].name}</strong>
-      </span>
-      <i>
-      </i>
-      <span>
-      <span class="summary-label">Player</span>
-      <strong>${firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange'}</strong>
-      </span>
-      <i>
-      </i>
-      <span>
-      <span class="summary-label">Board size</span>
-      <strong>${size === null ? 'Choose board size' : `${size} cards`}</strong>
-      </span>
-      <button class="primary settings-start" id="play" aria-label="Start" ${firstPlayer === null || size === null ? 'disabled' : ''}>
-      <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
-      <img class="start-label" src="${asset('Start.png')}" alt="" draggable="false">
-      </button>
-      </section>
-      
-      </div>
-      </div>
+      </section>`;
+}
+
+/**
+ * Render the current settings and disable Start until both required choices exist.
+ *
+ * @param theme - Committed theme selection, independent of hover previews.
+ * @param firstPlayer - Selected starting player, or null before selection.
+ * @param size - Selected card count, or null before selection.
+ * @returns The selection summary and its Start button.
+ */
+function settingsSummaryMarkup(theme: Theme, firstPlayer: Player | null, size: BoardSize | null): string {
+  return `<section class="settings-summary" aria-label="Gewaehlte Einstellungen" aria-live="polite">
+      ${summaryFieldMarkup('Game theme', themes[theme].name)}
+      <i aria-hidden="true"></i>
+      ${summaryFieldMarkup('Player', firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange')}
+      <i aria-hidden="true"></i>
+      ${summaryFieldMarkup('Board size', size === null ? 'Choose board size' : `${size} cards`)}
+      ${settingsStartButtonMarkup(firstPlayer, size)}
       </section>`;
 }
 
@@ -249,29 +238,29 @@ export function settingsMarkup(theme: Theme, firstPlayer: Player | null, size: B
  * Render game markup.
  *
  * @param theme - Theme whose artwork should be rendered.
- * @param size - Board card count; null indicates no selection in settings.
+ * @param size - Selected board card count (16, 24 or 36).
  * @param cards - Shuffled deck in board order.
  * @returns HTML markup for this interface element.
  */
 export function gameMarkup(theme: Theme, size: BoardSize, cards: Card[]): string {
   return `<section class="game">
       <h1 class="game-title sr-only">${themes[theme].name} Memory – ${size} Karten</h1>
-      <header class="game-toolbar" aria-label="Spielstand und Spielsteuerung">
-      <div class="scoreboard" aria-live="polite">
-      </div>
-      <p class="current-player" aria-live="polite">
-      </p>
-      <button class="exit-button" id="exit">${exitMarkup()}</button>
-      </header>
+      ${gameToolbarMarkup()}
       <p class="game-status sr-only" role="status">
       </p>
-      <div role="group" class="board ${size === 16 ? 'four' : 'six'}" aria-label="Memory-Spielfeld">${cards.map((card, index) => `<button class="card" id="card-${index}" data-card="${index}" aria-label="Karte ${index + 1} aufdecken">
-      <span class="card-inner">
-      <span class="card-back" aria-hidden="true">${cardImage(theme, themes[theme].back, 'back', themes[theme].standaloneBack)}</span>
-      <span class="card-front" aria-hidden="true">${motifFace(theme, card.value)}</span>
-      </span>
-      </button>`).join('')}</div>
-      <dialog id="exit-dialog" class="exit-dialog" aria-labelledby="exit-title">
+      ${boardMarkup(theme, size, cards)}
+      ${exitDialogMarkup(theme)}
+      </section>`;
+}
+
+/**
+ * Render the confirmation dialog used when leaving an active round.
+ *
+ * @param theme - Theme selecting the wording of the confirmation buttons.
+ * @returns A native dialog with resume and quit controls.
+ */
+function exitDialogMarkup(theme: Theme): string {
+  return `<dialog id="exit-dialog" class="exit-dialog" aria-labelledby="exit-title">
       <h2 id="exit-title">
       Are you sure you want to quit the game?
       </h2>
@@ -279,8 +268,7 @@ export function gameMarkup(theme: Theme, size: BoardSize, cards: Card[]): string
       <button class="back-to-game" id="resume-game">${theme === 'gaming' ? 'No, back to game' : 'Back to game'}</button>
       <button class="confirm-exit" id="confirm-exit">${theme === 'gaming' ? 'Yes, quit game' : 'Exit game'}</button>
       </div>
-      </dialog>
-      </section>`;
+      </dialog>`;
 }
 
 /**
@@ -298,12 +286,7 @@ export function resultMarkup(theme: Theme, scores: number[]): string {
       <p>
       <span class="final-score-label">Final score</span>
       </p>
-      <div class="final-score">${theme === 'gaming' ? `<span class="gaming-final-scores">
-      <span class="final-player-score">${playerPawn(0)}<strong class="blue-text" aria-label="Blue: ${scores[0]} Paare">${scores[0]}</strong>
-      </span>
-      <span class="final-player-score">${playerPawn(1)}<strong class="orange-text" aria-label="Orange: ${scores[1]} Paare">${scores[1]}</strong>
-      </span>
-      </span>` : scoreMarkup(theme, scores)}</div>
+      <div class="final-score">${finalScoresMarkup(theme, scores)}</div>
       </section>`;
 }
 
@@ -328,4 +311,150 @@ export function winnerMarkup(theme: Theme, draw: boolean, color: string, winner:
       <img src="${asset(theme === 'gaming' ? 'result-home.png' : 'secondary button (2).png')}" alt="${theme === 'gaming' ? 'Home' : 'Back to start'}">
       </button></div>
       </section>`;
+}
+
+/**
+ * Render the palette icon used by the theme legend.
+ *
+ * @returns Decorative SVG markup for the theme selector.
+ */
+function themeIconMarkup(): string {
+  return `<svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3a9 9 0 1 0 0 18h1.5a2.5 2.5 0 0 0 1.8-4.2 1.4 1.4 0 0 1 1-2.4H18A3 3 0 0 0 21 11c0-4.4-4-8-9-8Z"/>
+      <circle cx="7.5" cy="10" r=".8"/>
+      <circle cx="11" cy="6.8" r=".8"/>
+      <circle cx="15.5" cy="7.5" r=".8"/>
+      <circle cx="6.8" cy="14.5" r=".8"/>
+      </svg>`;
+}
+
+/**
+ * Render the controller icon inside the home Play button.
+ *
+ * @returns Decorative SVG markup for the Play button.
+ */
+function playControllerMarkup(): string {
+  return `<svg class="home-play-controller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7.5 5h9c2 0 3.1 1.2 3.6 3.2l1.5 7.6c.5 2.5-1.9 3.7-3.5 1.8L15.5 15h-7l-2.6 2.6c-1.6 1.9-4 .7-3.5-1.8l1.5-7.6C4.4 6.2 5.5 5 7.5 5Z"/>
+        <path d="M7.5 8v5M5 10.5h5"/>
+        <circle cx="16" cy="9" r=".6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="11.5" r=".6" fill="currentColor" stroke="none"/>
+      </svg>`;
+}
+
+/**
+ * Render the home-screen button that opens the game settings.
+ *
+ * @returns The Play button with its controller and arrow.
+ */
+function homePlayButtonMarkup(): string {
+  return `<button class="primary image-button" id="start" aria-label="Play — zu den Einstellungen">
+      ${playControllerMarkup()}
+      <span class="home-play-label">Play</span>
+      <img class="home-play-arrow" src="${asset('Arrow 1.png')}" alt="" draggable="false">
+      </button>`;
+}
+
+/**
+ * Group the three settings selectors into one options section.
+ *
+ * @param theme - Committed theme selection.
+ * @param firstPlayer - Starting player, or null before selection.
+ * @param size - Card count, or null before selection.
+ * @returns The theme, player and board-size fieldsets.
+ */
+function settingsOptionsMarkup(theme: Theme, firstPlayer: Player | null, size: BoardSize | null): string {
+  return `<section class="settings-options" aria-label="Spieleinstellungen">
+          ${themeOptionsMarkup(theme)}
+          ${playerOptionsMarkup(firstPlayer)}
+          ${boardOptionsMarkup(size)}
+        </section>`;
+}
+
+/**
+ * Render Start with its enabled state derived from the required choices.
+ *
+ * @param firstPlayer - Starting player, or null before selection.
+ * @param size - Card count, or null before selection.
+ * @returns The Start button, disabled while a required choice is missing.
+ */
+function settingsStartButtonMarkup(firstPlayer: Player | null, size: BoardSize | null): string {
+  return `<button class="primary settings-start" id="play" aria-label="Start" ${firstPlayer === null || size === null ? 'disabled' : ''}>
+      <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
+      <img class="start-label" src="${asset('Start.png')}" alt="" draggable="false">
+      </button>`;
+}
+
+/**
+ * Render one category and its selected value in the settings summary.
+ *
+ * @param label - Visible category heading.
+ * @param value - Selected value or prompt shown below the heading.
+ * @returns A summary item with a label and value.
+ */
+function summaryFieldMarkup(label: string, value: string): string {
+  return `<span>
+      <span class="summary-label">${label}</span>
+      <strong>${value}</strong>
+    </span>`;
+}
+
+/**
+ * Render the empty live scoreboard, turn indicator and exit control.
+ *
+ * @returns The toolbar populated by the active round controller.
+ */
+function gameToolbarMarkup(): string {
+  return `<header class="game-toolbar" aria-label="Spielstand und Spielsteuerung">
+      <div class="scoreboard" aria-live="polite">
+      </div>
+      <p class="current-player" aria-live="polite">
+      </p>
+      <button class="exit-button" id="exit">${exitMarkup()}</button>
+      </header>`;
+}
+
+/**
+ * Render the selected board grid in shuffled deck order.
+ *
+ * @param theme - Theme providing card artwork.
+ * @param size - Total card count, selecting four or six columns.
+ * @param cards - Shuffled deck in display order.
+ * @returns The board grid with one button per card.
+ */
+function boardMarkup(theme: Theme, size: BoardSize, cards: Card[]): string {
+  return `<div role="group" class="board ${size === 16 ? 'four' : 'six'}" aria-label="Memory-Spielfeld">${cards.map((card, index) => cardButtonMarkup(theme, card, index)).join('')}</div>`;
+}
+
+/**
+ * Render one face-down card button with both animated faces.
+ *
+ * @param theme - Theme providing the card front and back.
+ * @param card - Card whose motif appears on the front.
+ * @param index - Zero-based deck index used by the button ID and click handler.
+ * @returns A card button with both faces ready for flip animation.
+ */
+function cardButtonMarkup(theme: Theme, card: Card, index: number): string {
+  return `<button class="card" id="card-${index}" data-card="${index}" aria-label="Karte ${index + 1} aufdecken">
+      <span class="card-inner">
+      <span class="card-back" aria-hidden="true">${cardImage(theme, themes[theme].back, 'back', themes[theme].standaloneBack)}</span>
+      <span class="card-front" aria-hidden="true">${motifFace(theme, card.value)}</span>
+      </span>
+      </button>`;
+}
+
+/**
+ * Render the final scoreboard in the selected theme.
+ *
+ * @param theme - Theme selecting pawn artwork or text labels.
+ * @param scores - Final pair counts indexed by player, blue first.
+ * @returns The final scores for both players.
+ */
+function finalScoresMarkup(theme: Theme, scores: number[]): string {
+  return theme === 'gaming' ? `<span class="gaming-final-scores">
+      <span class="final-player-score">${playerPawn(0)}<strong class="blue-text" aria-label="Blue: ${scores[0]} Paare">${scores[0]}</strong>
+      </span>
+      <span class="final-player-score">${playerPawn(1)}<strong class="orange-text" aria-label="Orange: ${scores[1]} Paare">${scores[1]}</strong>
+      </span>
+      </span>` : scoreMarkup(theme, scores);
 }
