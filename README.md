@@ -29,7 +29,7 @@ Exit game opens a confirmation dialog. Returning preserves the round; confirming
 ## Interface and accessibility
 
 - Visible controller decoration on the home screen, without requiring hover.
-- SVG favicon included in development and production builds.
+- PNG favicon using the game controller icon (`public/favicon.png`), included in development and production builds.
 - Native radio controls, keyboard focus management and screen-reader announcements.
 - One main heading per screen (visually hidden on the game board); fieldsets and legends group settings, and the confirmation dialog uses a second-level heading.
 - Text sizes of at least 16 pixels, with wrapping for narrow settings previews.
