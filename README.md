@@ -1,6 +1,10 @@
-# Memory
+# Memory Game
 
 A two-player memory game built with TypeScript, Vite and Sass. Choose between **Code vibes** and **Gaming**, each with 18 motifs and boards of 16, 24 or 36 cards.
+
+![Memory Game settings screen showing theme, starting player and board size options beside a card preview](docs/images/settings-preview.png)
+
+The settings screen lets you choose a theme, starting player and board size before starting a round.
 
 ## Development
 
@@ -46,6 +50,7 @@ Exit game opens a confirmation dialog. Returning preserves the round; confirming
 - `src/assets.ts`: asset URLs respecting the configured Vite base path.
 - `src/styles/`: Sass layers for screens, components and responsive layouts.
 - `public/`: static card artwork and favicon.
+- `docs/images/`: screenshots used in this README.
 - `tests/game.test.cjs`: game rules, navigation, settings validation and asset-path regression tests.
 
 ## Validation
