@@ -6,23 +6,32 @@ import {
   previewScoresMarkup, previewCurrentPlayerMarkup,
 } from './templates';
 
+/** Application mount element shared by all rendered screens. */
 const root = document.querySelector<HTMLDivElement>('#app')!;
+/** Committed theme selection; temporary hover previews do not overwrite it. */
 let theme: Theme = 'coding';
 /** Selected card count; null until the user chooses a board. */
 let size: BoardSize | null = null;
 /** Selected starting player; null until explicitly chosen. */
 let firstPlayer: Player | null = null;
+/** Player taking the current turn: 0 for blue, 1 for orange. */
 let player: Player = 0;
+/** Matched-pair totals indexed by player; reset at the start of each round. */
 let scores = [0, 0];
+/** Shuffled deck for the active round, including each card's matched state. */
 let cards: Card[] = [];
+/** Indices of the zero, one or two unmatched cards currently revealed. */
 let opened: number[] = [];
 /** Prevents further flips while a revealed pair is being resolved. */
 let locked = false;
 /** Round token used to ignore delayed callbacks after navigation. */
 let round = 0;
+/** Number of completed two-card attempts in the active round. */
 let moves = 0;
 
-/** Replace the active screen and expose its theme and page to the styles.
+/**
+ * Replace the active screen and expose its theme and page to the styles.
+ *
  * @param content - HTML markup for the requested screen.
  * @param page - Screen identifier used by page-specific styles.
  */
@@ -86,23 +95,45 @@ function bindThemePreviews(): void {
   });
 }
 
-/** Update the preview and selection summary without replacing controls.
+/**
+ * Update the preview and selection summary without replacing controls.
+ *
  * @param previewTheme - Temporary preview theme; defaults to the committed theme.
  */
 function refreshSettings(previewTheme: Theme = theme): void {
   document.body.dataset.theme = previewTheme;
+  refreshPreview(previewTheme);
+  refreshSelectionSummary();
+}
+
+/**
+ * Update the sample artwork and toolbar without replacing settings controls.
+ *
+ * @param previewTheme - Committed theme or temporary theme being previewed.
+ */
+function refreshPreview(previewTheme: Theme): void {
   const back = root.querySelector<HTMLElement>('.preview-back');
   const front = root.querySelector<HTMLElement>('.preview-front');
+  const sample = themes[previewTheme].motifs[previewTheme === 'gaming' ? 6 : 0];
   if (back) back.innerHTML = cardImage(previewTheme, themes[previewTheme].back, 'back', true);
-  if (front) front.innerHTML = motifFace(previewTheme, themes[previewTheme].motifs[previewTheme === 'gaming' ? 6 : 0].name);
+  if (front) front.innerHTML = motifFace(previewTheme, sample.name);
   const miniScores = root.querySelector<HTMLElement>('.mini-scores');
   if (miniScores) miniScores.innerHTML = previewScoresMarkup(previewTheme);
   const current = root.querySelector<HTMLElement>('.preview-bar .current-player');
   if (current) current.innerHTML = previewCurrentPlayerMarkup(previewTheme, firstPlayer ?? 0);
+}
+
+/** Reflect committed choices in the summary and enable Start only when complete. */
+function refreshSelectionSummary(): void {
   const start = root.querySelector<HTMLButtonElement>('#play');
   if (start) start.disabled = firstPlayer === null || size === null;
+  const values = [
+    themes[theme].name,
+    firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange',
+    size === null ? 'Choose board size' : `${size} cards`,
+  ];
   const summary = root.querySelectorAll<HTMLElement>('.settings-summary strong');
-  [themes[theme].name, firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange', size === null ? 'Choose board size' : `${size} cards`].forEach((value, index) => {
+  values.forEach((value, index) => {
     if (summary[index]) summary[index].textContent = value;
   });
 }
@@ -120,7 +151,9 @@ function startGame(): void {
   renderGame();
 }
 
-/** Create two cards per motif and shuffle them with Fisher-Yates.
+/**
+ * Create two cards per motif and shuffle them with Fisher-Yates.
+ *
  * @param count - Total number of cards selected for this round.
  * @returns A shuffled deck containing exactly two cards per motif.
  */
@@ -154,26 +187,46 @@ function showExitDialog(): void {
   (document.getElementById('exit-dialog') as HTMLDialogElement | null)?.showModal();
 }
 
-/** Synchronize the scoreboard, turn announcement and individual cards. */
+/** Synchronize the toolbar and all card buttons with the current round state. */
 function updateBoard(): void {
   const scoreboard = root.querySelector('.scoreboard');
   if (!scoreboard) return;
   scoreboard.innerHTML = scoreMarkup(theme, scores);
-  const currentPlayer = root.querySelector('.current-player');
-  if (currentPlayer) currentPlayer.innerHTML = currentPlayerMarkup(player);
-  root.querySelector('.game-status')!.textContent = `${player === 0 ? 'Blau' : 'Orange'} ist am Zug · ${moves} Versuche · ${scores[0] + scores[1]} von ${cards.length / 2} Paaren`;
-  cards.forEach((card, index) => {
-    const button = document.getElementById(`card-${index}`) as HTMLButtonElement | null;
-    if (!button) return;
-    const visible = opened.includes(index) || cards[index].matched;
-    button.classList.toggle('flipped', visible);
-    button.classList.toggle('matched', cards[index].matched);
-    button.disabled = cards[index].matched;
-    button.setAttribute('aria-label', `Karte ${index + 1}: ${visible ? cards[index].value + (cards[index].matched ? ', gefunden' : ', aufgedeckt') : 'verdeckt'}`);
-  });
+  updateTurnStatus();
+  cards.forEach(updateCard);
 }
 
-/** Reveal a card and resolve a completed pair after its animation.
+/** Update the current-player indicator and accessible round progress announcement. */
+function updateTurnStatus(): void {
+  const currentPlayer = root.querySelector('.current-player');
+  if (currentPlayer) currentPlayer.innerHTML = currentPlayerMarkup(player);
+  const status = root.querySelector('.game-status');
+  if (status) {
+    status.textContent = `${player === 0 ? 'Blau' : 'Orange'} ist am Zug ? ${moves} Versuche ? `
+      + `${scores[0] + scores[1]} von ${cards.length / 2} Paaren`;
+  }
+}
+
+/**
+ * Reflect one card's visibility and matched state in its button.
+ *
+ * @param card - Card data from the active deck.
+ * @param index - Zero-based deck position used by the corresponding button ID.
+ */
+function updateCard(card: Card, index: number): void {
+  const button = document.getElementById(`card-${index}`) as HTMLButtonElement | null;
+  if (!button) return;
+  const visible = opened.includes(index) || card.matched;
+  const description = visible ? card.value + (card.matched ? ', gefunden' : ', aufgedeckt') : 'verdeckt';
+  button.classList.toggle('flipped', visible);
+  button.classList.toggle('matched', card.matched);
+  button.disabled = card.matched;
+  button.setAttribute('aria-label', `Karte ${index + 1}: ${description}`);
+}
+
+/**
+ * Reveal a card and resolve a completed pair after its animation.
+ *
  * @param index - Zero-based position of the clicked card in the active deck.
  */
 function flipCard(index: number): void {
@@ -187,16 +240,29 @@ function flipCard(index: number): void {
   const [first, second] = opened;
   const match = cards[first].value === cards[second].value;
   window.setTimeout(() => {
-    if (round !== currentRound) return;
-    if (match) {
-      cards[first].matched = cards[second].matched = true;
-      scores[player]++;
-    } else player = player === 0 ? 1 : 0;
-    opened = [];
-    locked = false;
-    updateBoard();
-    if (cards.every(card => card.matched)) finishGame();
+    if (round === currentRound) resolvePair(first, second, match);
   }, match ? 650 : 1100);
+}
+
+/**
+ * Award a matched pair or switch turns, then unlock the active round.
+ *
+ * @param first - Deck index of the first revealed card.
+ * @param second - Deck index of the second revealed card.
+ * @param match - Whether the two revealed cards have the same motif.
+ * @remarks Call only after checking that the scheduled round token is still current.
+ */
+function resolvePair(first: number, second: number, match: boolean): void {
+  if (match) {
+    cards[first].matched = cards[second].matched = true;
+    scores[player]++;
+  } else {
+    player = player === 0 ? 1 : 0;
+  }
+  opened = [];
+  locked = false;
+  updateBoard();
+  if (cards.every(card => card.matched)) finishGame();
 }
 
 /** Show the final score before advancing to the winner screen. */
