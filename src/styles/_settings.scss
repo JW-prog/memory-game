@@ -121,13 +121,13 @@ legend span {
 .radio-option:has(input:checked)::after {
   content: '';
   color: var(--accent);
-  font-size: 15px;
+  font-size: 16px;
   margin-left: 8px;
 }
 .radio-option small {
   color: #777;
   font-weight: 400;
-  font-size: 11px;
+  font-size: 16px;
 }
 .unavailable {
   opacity: .45;
@@ -141,7 +141,7 @@ legend span {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 16px;
 }
 .preview-bar > :last-child {
   border: 1px solid var(--accent);
@@ -186,10 +186,10 @@ legend span {
   margin-top: 28px;
 }
 .settings-summary > span {
-  font-size: 13px;
+  font-size: 16px;
 }
 .settings-summary strong {
-  font-size: 10px;
+  font-size: 16px;
   font-weight: 400;
   margin-top: 5px;
   color: #666;
@@ -223,7 +223,7 @@ legend span {
   width: 54px;
 }
 .asset-note {
-  font-size: 11px;
+  font-size: 16px;
   color: #777;
   line-height: 1.5;
   margin-top: 16px;

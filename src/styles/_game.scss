@@ -26,7 +26,7 @@ body[data-page='game'][data-theme='gaming'] {
   align-items: center;
   gap: 4px;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
 }
 .score-chip img {
@@ -39,7 +39,7 @@ body[data-page='game'][data-theme='gaming'] {
 .current-player {
   margin: 0;
   text-align: center;
-  font-size: 13px;
+  font-size: 16px;
 }
 .exit-button, .result-button {
   border: 1px solid #80b4aa;
@@ -145,7 +145,7 @@ body[data-page='game'][data-theme='gaming'] {
   background: #0009;
 }
 .exit-dialog p {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .back-to-game {
@@ -211,5 +211,5 @@ body[data-page='game'][data-theme='gaming'] {
   font-size: clamp(20px, 4vw, 40px);
 }
 .placeholder-motif small {
-  font-size: clamp(7px, 1.4vw, 12px);
+  font-size: clamp(16px, 1.4vw, 18px);
 }

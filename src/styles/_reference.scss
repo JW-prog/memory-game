@@ -1,0 +1,102 @@
+/* Shared proportions visible in the supplied overview of both themes. */
+.game-title.sr-only {
+  margin: -1px;
+}
+
+.game {
+  padding-top: clamp(24px, 4svh, 48px);
+}
+
+.game-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 20px;
+}
+
+.game-over h1 {
+  margin: 0;
+  line-height: 1.15;
+}
+
+.game-over > p {
+  margin: 0;
+}
+
+.game-over .final-score {
+  margin: 0;
+}
+
+.winner-screen,
+body[data-theme='gaming'] .winner-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(48px, 15svh) 24px 48px;
+}
+
+.winner-screen .winner-kicker {
+  margin: 0 0 12px;
+}
+
+.winner-screen h1 {
+  margin: 0;
+}
+
+body[data-theme='gaming'] .winner-screen h1:not(.draw-text) {
+  color: #efc12e;
+  text-transform: uppercase;
+  font-size: clamp(24px, 3vw, 40px);
+}
+
+.winner-screen .winner-symbol,
+body[data-theme='gaming'] .winner-screen .winner-symbol {
+  margin: 24px 0;
+}
+
+.winner-screen .winner-symbol .player-pawn,
+body[data-theme='gaming'] .winner-screen .winner-trophy {
+  height: clamp(120px, 24svh, 230px);
+}
+
+.winner-screen .winner-symbol .draw-symbol {
+  height: clamp(120px, 23svh, 210px);
+}
+
+.winner-screen .winner-actions {
+  margin-top: 8px;
+}
+
+@media (max-height: 600px) {
+  .winner-screen,
+  body[data-theme='gaming'] .winner-screen {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .winner-screen .winner-symbol,
+  body[data-theme='gaming'] .winner-screen .winner-symbol {
+    margin-block: 16px;
+  }
+}
+
+/* On phones, keep the full selection prompts readable within the viewport. */
+@media (max-width: 600px) {
+  .settings-summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .settings-summary i { display: none; }
+
+  .settings-summary .settings-start {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: stretch;
+    width: 100%;
+  }
+}

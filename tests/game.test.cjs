@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const { stripTypeScriptTypes } = require('node:module');
 
-function game() {
+function game(selected = true) {
   const scoreboard = { innerHTML: '' };
   const currentPlayer = { innerHTML: '' };
   const element = { innerHTML: '', textContent: '', dataset: {}, addEventListener() {}, setAttribute() {}, focus() {}, querySelectorAll() { return []; }, querySelector(selector) { return selector === '.scoreboard' ? scoreboard : selector === '.current-player' ? currentPlayer : element; } };
@@ -33,6 +33,7 @@ function game() {
     .replace(/^export /gm, '')
     .replaceAll('import.meta.env.BASE_URL', "'/projects/memory-game/'");
   vm.runInContext(stripTypeScriptTypes(source), context);
+  if (selected) vm.runInContext('firstPlayer = 0; size = 16;', context);
   return { run: expression => vm.runInContext(expression, context), tick: () => timers.shift()?.() };
 }
 
@@ -165,7 +166,7 @@ test('All screens resolve their images with exact filename casing in both themes
   }
 });
 
-test('Gaming results keep Home navigation without confetti or a direct restart button', () => {
+test('Gaming results include confetti and Home navigation without a direct restart button', () => {
   const app = game();
   app.run("theme = 'gaming'");
   for (const scores of [[5, 3], [3, 5], [4, 4]]) {
@@ -173,7 +174,7 @@ test('Gaming results keep Home navigation without confetti or a direct restart b
     const html = app.run('root.innerHTML');
     assert.ok(html.includes('id="back-to-start"'));
     assert.equal(html.includes('id="again"'), false);
-    assert.equal(html.includes('class="confetti"'), false);
+    assert.equal(html.includes('class="confetti"'), scores[0] !== scores[1]);
   }
   app.run('home(); settings(); startGame()');
   assert.equal(app.run('document.body.dataset.page'), 'game');
@@ -218,5 +219,41 @@ test('Screen headings use visible text and settings sections have matching tags'
   assert.ok(app.run('homeMarkup().includes("<h1>Ready to play?</h1>")'));
   const html = app.run('settingsMarkup("coding", 1, 24)');
   assert.equal((html.match(/<section\b/g) || []).length, (html.match(/<\/section>/g) || []).length);
-  assert.ok(app.run('gameMarkup("coding", 24, [])').includes('class="game-title"'));
+  assert.ok(app.run('gameMarkup("coding", 24, [])').includes('class="game-title sr-only"'));
+});
+
+
+test('First visit requires explicit player and board choices before starting', () => {
+  const app = game(false);
+  app.run('settings()');
+  assert.equal(app.run('firstPlayer'), null);
+  assert.equal(app.run('size'), null);
+  const html = app.run('settingsMarkup(theme, firstPlayer, size)');
+  assert.equal((html.match(/checked/g) || []).length, 1);
+  assert.match(html, /id="play"[^>]*disabled/);
+  app.run('startGame()');
+  assert.equal(app.run('document.body.dataset.page'), 'settings');
+  for (const selection of ['firstPlayer = 0', 'firstPlayer = null; size = 24']) {
+    app.run(`${selection}; refreshSettings(); startGame()`);
+    assert.equal(app.run('document.body.dataset.page'), 'settings');
+    assert.equal(app.run('root.querySelector("#play").disabled'), true);
+  }
+  app.run('firstPlayer = 1; refreshSettings()');
+  assert.equal(app.run('root.querySelector("#play").disabled'), false);
+  app.run('startGame()');
+  assert.equal(app.run('document.body.dataset.page'), 'game');
+  assert.equal(app.run('cards.length'), 24);
+  assert.equal(app.run('player'), 1);
+});
+
+test('Both themes celebrate wins with confetti and keep draws undecorated', () => {
+  const app = game();
+  for (const theme of ['coding', 'gaming']) {
+    for (const scores of [[5, 3], [3, 5], [4, 4]]) {
+      app.run(`theme = '${theme}'; scores = ${JSON.stringify(scores)}; showWinner()`);
+      assert.equal(/class="confetti"/.test(app.run('root.innerHTML')), scores[0] !== scores[1]);
+      assert.equal(app.run('root.innerHTML.includes("WENIGER SCROLLEN")'), false);
+      assert.equal(app.run('root.innerHTML.includes("MADE FOR PLAY")'), false);
+    }
+  }
 });

@@ -167,7 +167,7 @@ body[data-theme='gaming'] .settings-preview .mini-scores {
   padding: 4svh 7.8% 55px;
 }
 .game-toolbar {
-  --hud-font: clamp(12px, 1.5vw, 20px);
+  --hud-font: clamp(16px, 1.5vw, 20px);
   width: 100%;
   max-width: 1260px;
   min-height: 34px;
@@ -255,7 +255,7 @@ body[data-theme='gaming'] .settings-preview .mini-scores {
     padding: 24px 5% 40px;
   }
   .game-toolbar {
-    --hud-font: 12px;
+    --hud-font: 16px;
     gap: 8px;
   }
   .game-toolbar .scoreboard {
@@ -263,7 +263,7 @@ body[data-theme='gaming'] .settings-preview .mini-scores {
     padding: 8px;
   }
   .game-toolbar .score-chip {
-    font-size: 12px;
+    font-size: 16px;
     gap: 2px;
   }
   .game-toolbar .current-player-marker {
@@ -448,7 +448,7 @@ body[data-theme='gaming'] .preview-bar .current-player-marker {
   padding: 8px 12px;
   background: #fff;
   border-radius: 6px;
-  font-size: clamp(14px, 1.5vw, 20px);
+  font-size: clamp(16px, 1.5vw, 20px);
   font-variant-numeric: tabular-nums;
 }
 .gaming-scoreboard .player-pawn {
@@ -702,7 +702,7 @@ body {
   font-family: 'Red Rose', sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 100%;
   letter-spacing: 0;
 }
@@ -730,7 +730,7 @@ body {
   font-family: 'Red Rose', sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 100%;
   letter-spacing: 0;
 }
@@ -750,7 +750,7 @@ body {
   align-items: center;
   gap: 4px;
   font-family: 'Red Rose', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
@@ -964,7 +964,7 @@ body {
   min-height: 30px;
   padding: 5px 24px 5px 30px;
   gap: 8px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .settings-options .radio-option input {
   appearance: none;
@@ -992,11 +992,11 @@ body {
   }
 }
 .settings-options .card-count-label {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
 }
 .settings-options .radio-option small {
-  font-size: 11px;
+  font-size: 16px;
 }
 .settings-options .radio-option::after {
   font-size: 16px;
@@ -1037,7 +1037,7 @@ body {
   white-space: nowrap;
 }
 .settings-preview .preview-bar .settings-current-player-label {
-  font-size: 10px;
+  font-size: 16px;
 }
 .settings-preview .settings-player-label {
   height: 8px;
@@ -1048,7 +1048,7 @@ body {
   gap: 6px;
 }
 .settings-preview .preview-bar .settings-exit-label {
-  font-size: 10px;
+  font-size: 16px;
 }
 .settings-preview .settings-exit-icon {
   height: 12px;
@@ -1162,7 +1162,7 @@ body[data-theme='gaming'] .settings-preview .preview-bar {
     flex-wrap: wrap;
   }
   .settings-summary > span, .settings-summary .summary-label {
-    font-size: 14px;
+    font-size: 16px;
   }
   .settings-summary i {
     width: 6px;
@@ -1336,7 +1336,7 @@ body[data-theme='gaming'] .game-toolbar .text-scoreboard {
   padding: 6px 10px;
   border-radius: 5px;
   background: #fff;
-  font: 700 14px/1 'Red Rose', sans-serif;
+  font: 700 16px/1 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .game-toolbar .exit-button {
   width: auto;
@@ -1350,7 +1350,7 @@ body[data-theme='gaming'] .game-toolbar .exit-button {
 }
 body[data-theme='gaming'] .game-toolbar .game-exit-label {
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
 }
 body[data-theme='gaming'] .game-toolbar .game-exit-icon {
   height: 16px;
@@ -1371,7 +1371,7 @@ body[data-theme='gaming'] .game .board.six {
   }
   body[data-theme='gaming'] .game-toolbar .text-scoreboard {
     gap: 12px;
-    font-size: 12px;
+    font-size: 16px;
   }
   body[data-theme='gaming'] .game .board.six {
     width: min(90vw, 58svh);
@@ -1385,7 +1385,7 @@ body[data-theme='gaming'] .settings-preview .preview-bar .mini-scores {
 }
 body[data-theme='gaming'] .settings-preview .preview-player-score {
   gap: 4px;
-  font: 700 11px/1 'Red Rose', sans-serif;
+  font: 700 16px/1 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .settings-preview .preview-player-score .player-pawn {
   height: 13px;

@@ -8,38 +8,38 @@ import {
 
 const root = document.querySelector<HTMLDivElement>('#app')!;
 let theme: Theme = 'coding';
-let size: BoardSize = 16;
-let firstPlayer: Player = 0;
+/** Selected card count; null until the user chooses a board. */
+let size: BoardSize | null = null;
+/** Selected starting player; null until explicitly chosen. */
+let firstPlayer: Player | null = null;
 let player: Player = 0;
 let scores = [0, 0];
 let cards: Card[] = [];
 let opened: number[] = [];
+/** Prevents further flips while a revealed pair is being resolved. */
 let locked = false;
+/** Round token used to ignore delayed callbacks after navigation. */
 let round = 0;
 let moves = 0;
 
-/** Render a screen and bind the shared home navigation. */
+/** Replace the active screen and expose its theme and page to the styles.
+ * @param content - HTML markup for the requested screen.
+ * @param page - Screen identifier used by page-specific styles.
+ */
 function shell(content: string, page: 'home' | 'settings' | 'game' | 'result' | 'winner' = 'settings'): void {
   document.body.dataset.theme = theme;
   document.body.dataset.page = page;
-  root.innerHTML = `<header class="brand">
-      <a href="#" aria-label="Memory Startseite">memory ✳</a>
-      <span>WENIGER SCROLLEN. MEHR SPIELEN.</span>
-      </header>
-      <main>${content}</main>
-      <footer>Ein Spiel. Zwei Köpfe. Viele gute Momente.<span>MADE FOR PLAY ✳</span>
-      </footer>`;
-  root.querySelector('.brand a')?.addEventListener('click', (event) => {
-    event.preventDefault();
-    home();
-    focusHeading();
-  });
+  root.innerHTML = `<main>${content}</main>`;
 }
+
+/** Move keyboard focus to the current screen heading after navigation. */
 function focusHeading(): void {
   const heading = root.querySelector<HTMLElement>('h1');
   heading?.setAttribute('tabindex', '-1');
   heading?.focus();
 }
+
+/** Render the landing screen and bind the settings entry point. */
 function home(): void {
   round++;
   shell(homeMarkup(), 'home');
@@ -53,25 +53,8 @@ function home(): void {
 function settings(): void {
   round++;
   shell(settingsMarkup(theme, firstPlayer, size), 'settings');
-  root.querySelectorAll<HTMLInputElement>('input[name="theme"]').forEach(input => input.addEventListener('change', () => {
-    theme = input.value as Theme;
-    refreshSettings();
-  }));
-  root.querySelectorAll<HTMLInputElement>('input[name="player"]').forEach(input => input.addEventListener('change', () => {
-    firstPlayer = Number(input.value) as Player;
-    refreshSettings();
-  }));
-  root.querySelectorAll<HTMLInputElement>('input[name="size"]').forEach(input => input.addEventListener('change', () => {
-    size = Number(input.value) as BoardSize;
-    refreshSettings();
-  }));
-  root.querySelectorAll<HTMLInputElement>('input[name="theme"]').forEach(input => {
-    const label = input.closest('label');
-    label?.addEventListener('pointerenter', () => refreshSettings(input.value as Theme));
-    label?.addEventListener('pointerleave', () => refreshSettings());
-    input.addEventListener('focus', () => refreshSettings(input.value as Theme));
-    input.addEventListener('blur', () => refreshSettings());
-  });
+  bindSettingChoices();
+  bindThemePreviews();
   refreshSettings();
   document.querySelector('#settings-exit')?.addEventListener('click', () => {
     home();
@@ -79,7 +62,33 @@ function settings(): void {
   });
   document.querySelector('#play')?.addEventListener('click', startGame);
 }
-/** Update only the preview and summary, preserving controls, focus and layout. */
+
+/** Bind committed radio choices independently from temporary theme previews. */
+function bindSettingChoices(): void {
+  root.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.name === 'theme') theme = input.value as Theme;
+      if (input.name === 'player') firstPlayer = Number(input.value) as Player;
+      if (input.name === 'size') size = Number(input.value) as BoardSize;
+      refreshSettings();
+    });
+  });
+}
+
+/** Show a temporary theme on hover or focus without committing the choice. */
+function bindThemePreviews(): void {
+  root.querySelectorAll<HTMLInputElement>('input[name="theme"]').forEach(input => {
+    const label = input.closest('label');
+    label?.addEventListener('pointerenter', () => refreshSettings(input.value as Theme));
+    label?.addEventListener('pointerleave', () => refreshSettings());
+    input.addEventListener('focus', () => refreshSettings(input.value as Theme));
+    input.addEventListener('blur', () => refreshSettings());
+  });
+}
+
+/** Update the preview and selection summary without replacing controls.
+ * @param previewTheme - Temporary preview theme; defaults to the committed theme.
+ */
 function refreshSettings(previewTheme: Theme = theme): void {
   document.body.dataset.theme = previewTheme;
   const back = root.querySelector<HTMLElement>('.preview-back');
@@ -89,27 +98,45 @@ function refreshSettings(previewTheme: Theme = theme): void {
   const miniScores = root.querySelector<HTMLElement>('.mini-scores');
   if (miniScores) miniScores.innerHTML = previewScoresMarkup(previewTheme);
   const current = root.querySelector<HTMLElement>('.preview-bar .current-player');
-  if (current) current.innerHTML = previewCurrentPlayerMarkup(previewTheme, firstPlayer);
+  if (current) current.innerHTML = previewCurrentPlayerMarkup(previewTheme, firstPlayer ?? 0);
+  const start = root.querySelector<HTMLButtonElement>('#play');
+  if (start) start.disabled = firstPlayer === null || size === null;
   const summary = root.querySelectorAll<HTMLElement>('.settings-summary strong');
-  [themes[theme].name, firstPlayer === 0 ? 'Blue' : 'Orange', `${size} cards`].forEach((value, index) => {
+  [themes[theme].name, firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange', size === null ? 'Choose board size' : `${size} cards`].forEach((value, index) => {
     if (summary[index]) summary[index].textContent = value;
   });
 }
 
 /** Start a shuffled round using the selected settings. */
 function startGame(): void {
+  if (firstPlayer === null || size === null) return;
   round++;
   scores = [0, 0];
   moves = 0;
   player = firstPlayer;
   opened = [];
   locked = false;
-  const values = themes[theme].motifs.slice(0, size / 2).map(motif => motif.name);
-  cards = [...values, ...values].map(value => ({ value, matched: false }));
-  for (let index = cards.length - 1; index > 0; index--) {
+  cards = createDeck(size);
+  renderGame();
+}
+
+/** Create two cards per motif and shuffle them with Fisher-Yates.
+ * @param count - Total number of cards selected for this round.
+ * @returns A shuffled deck containing exactly two cards per motif.
+ */
+function createDeck(count: BoardSize): Card[] {
+  const values = themes[theme].motifs.slice(0, count / 2).map(motif => motif.name);
+  const deck = [...values, ...values].map(value => ({ value, matched: false }));
+  for (let index = deck.length - 1; index > 0; index--) {
     const other = Math.floor(Math.random() * (index + 1));
-    [cards[index], cards[other]] = [cards[other], cards[index]];
+    [deck[index], deck[other]] = [deck[other], deck[index]];
   }
+  return deck;
+}
+
+/** Render the active board and bind its navigation and card controls. */
+function renderGame(): void {
+  if (size === null) return;
   shell(gameMarkup(theme, size, cards), 'game');
   document.querySelector('#exit')?.addEventListener('click', showExitDialog);
   root.querySelectorAll<HTMLButtonElement>('[data-card]').forEach(button => button.addEventListener('click', () => flipCard(Number(button.dataset.card))));
@@ -121,17 +148,20 @@ function startGame(): void {
   updateBoard();
   focusHeading();
 }
+
+/** Ask for confirmation before leaving the active round. */
 function showExitDialog(): void {
   (document.getElementById('exit-dialog') as HTMLDialogElement | null)?.showModal();
 }
 
+/** Synchronize the scoreboard, turn announcement and individual cards. */
 function updateBoard(): void {
   const scoreboard = root.querySelector('.scoreboard');
   if (!scoreboard) return;
   scoreboard.innerHTML = scoreMarkup(theme, scores);
   const currentPlayer = root.querySelector('.current-player');
   if (currentPlayer) currentPlayer.innerHTML = currentPlayerMarkup(player);
-  root.querySelector('.game-status')!.textContent = `${player === 0 ? 'Blau' : 'Orange'} ist am Zug · ${moves} Versuche · ${scores[0] + scores[1]} von ${size / 2} Paaren`;
+  root.querySelector('.game-status')!.textContent = `${player === 0 ? 'Blau' : 'Orange'} ist am Zug · ${moves} Versuche · ${scores[0] + scores[1]} von ${cards.length / 2} Paaren`;
   cards.forEach((card, index) => {
     const button = document.getElementById(`card-${index}`) as HTMLButtonElement | null;
     if (!button) return;
@@ -142,7 +172,10 @@ function updateBoard(): void {
     button.setAttribute('aria-label', `Karte ${index + 1}: ${visible ? cards[index].value + (cards[index].matched ? ', gefunden' : ', aufgedeckt') : 'verdeckt'}`);
   });
 }
-/** Reveal up to two cards and resolve the pair after its animation. */
+
+/** Reveal a card and resolve a completed pair after its animation.
+ * @param index - Zero-based position of the clicked card in the active deck.
+ */
 function flipCard(index: number): void {
   if (locked || cards[index].matched || opened.includes(index)) return;
   opened.push(index);
@@ -177,6 +210,8 @@ function finishGame(): void {
   }, 3000);
   focusHeading();
 }
+
+/** Render the winning player or draw and bind the return to home. */
 function showWinner(): void {
   const draw = scores[0] === scores[1];
   const color = scores[0] > scores[1] ? 'blue' : 'orange';
@@ -188,6 +223,8 @@ function showWinner(): void {
   });
   focusHeading();
 }
+
+/** Initialize the application on the home screen. */
 export function initialize(): void {
   home();
 }

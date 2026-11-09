@@ -22,13 +22,13 @@
   display: block;
   min-height: 1.3em;
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.3;
   color: #525454;
 }
 .settings-summary i { background: var(--yellow); }
 .settings-preview .preview-cards > div { animation: none; }
-.settings-preview .game-current-player-label { font-size: 10px; }
+.settings-preview .game-current-player-label { font-size: 16px; }
 .settings-preview .game-player-label { height: 10px; }
 .settings-preview .preview-bar { min-height: 38px; }
 .home-content h1 {
@@ -62,7 +62,7 @@
 .flipped .card-back, .card-front, .flipped .card-front { visibility: visible; }
 @media (max-width: 500px) {
   .settings-summary { column-gap: 6px; padding-inline: 10px; }
-  .settings-summary > span, .settings-summary .summary-label { font-size: 14px; }
+  .settings-summary > span, .settings-summary .summary-label { font-size: 16px; }
 
 }
 @media (prefers-reduced-motion: reduce) {
@@ -72,7 +72,7 @@
 .radio-option:not(.unavailable):hover { background: #4bd0bc22; }
 .radio-option:not(.unavailable)::after { content: '\2192'; color: var(--accent); }
 .settings-preview .mini-scores { padding: 4px; }
-.settings-preview .score-entry { font-size: 9px; gap: 3px; }
+.settings-preview .score-entry { font-size: 16px; gap: 3px; }
 .settings-preview .score-entry > img { display: none; }
 
 
@@ -110,7 +110,7 @@ body[data-theme='gaming'] .settings-preview .preview-bar {
   padding: 7px 14px;
   gap: 10px;
   border-radius: 10px;
-  font: 700 9px/1.2 'Red Rose', sans-serif;
+  font: 700 16px/1.2 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .settings-preview .preview-bar .mini-scores {
   gap: 14px;
@@ -120,7 +120,7 @@ body[data-theme='gaming'] .settings-preview .preview-bar .mini-scores {
 }
 body[data-theme='gaming'] .settings-preview .preview-player-score {
   gap: 4px;
-  font: 700 11px/1 'Red Rose', sans-serif;
+  font: 700 16px/1 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .settings-preview .preview-player-score .player-pawn {
   height: 12px;
@@ -129,10 +129,10 @@ body[data-theme='gaming'] .settings-preview .preview-player-score .player-pawn {
 body[data-theme='gaming'] .settings-preview .preview-bar .current-player {
   min-width: 0;
   gap: 5px;
-  font-size: 9px;
+  font-size: 16px;
 }
 body[data-theme='gaming'] .settings-preview .preview-bar .settings-current-player-label {
-  font: 700 9px/1.2 'Red Rose', sans-serif;
+  font: 700 16px/1.2 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .settings-preview .gaming-current-pawn {
   width: 15px;
@@ -145,7 +145,7 @@ body[data-theme='gaming'] .settings-preview .preview-bar .preview-exit {
   border-radius: 7px;
 }
 body[data-theme='gaming'] .settings-preview .preview-bar .settings-exit-label {
-  font: 700 9px/1.2 'Red Rose', sans-serif;
+  font: 700 16px/1.2 'Red Rose', sans-serif;
 }
 body[data-theme='gaming'] .settings-preview .settings-exit-icon {
   height: 11px;
@@ -175,8 +175,8 @@ body[data-theme='gaming'] .settings-preview .settings-exit-icon {
 }
 @media (max-width: 600px) {
   .settings-summary i { display: block; }
-  .settings-summary > span, .settings-summary .summary-label { font-size: 12px; }
-  .settings-summary strong { font-size: 11px; }
+  .settings-summary > span, .settings-summary .summary-label { font-size: 16px; }
+  .settings-summary strong { font-size: 16px; }
 }
 
 .home-kicker {
@@ -211,5 +211,39 @@ body[data-theme='gaming'] .settings-preview .settings-exit-icon {
 @media (max-width: 480px) {
   .home-content { width: 86%; }
   .home-content h1 { font-size: 10.5vw; }
-  .home-kicker { font-size: 4vw; }
+  .home-kicker { font-size: max(16px, 4vw); }
+}
+
+/* Allow readable preview labels to wrap instead of clipping on small screens. */
+.settings-preview .preview-bar,
+body[data-theme='gaming'] .settings-preview .preview-bar {
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  gap: 12px;
+}
+.settings-preview .preview-bar .current-player {
+  flex-wrap: wrap;
+  white-space: normal;
+}
+.settings-start:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+.settings-start:disabled .start-icon { animation: none; }
+@media (max-width: 600px) {
+  .settings-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .settings-summary i { display: none; }
+  .settings-summary .settings-start {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .settings-preview .preview-bar .current-player {
+    grid-row: auto;
+    grid-column: auto;
+  }
 }

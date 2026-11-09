@@ -2,7 +2,15 @@ import type { Theme, Player, BoardSize, Card } from './types';
 import { themes } from './themes';
 import { asset } from './assets';
 
-/** Reusable HTML templates. All changing values are passed by the caller. */
+/**
+ * Render card image.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param file - Exact asset filename including its extension.
+ * @param side - Card face used to select the image crop.
+ * @param standalone - Whether the asset contains one complete card.
+ * @returns HTML markup for this interface element.
+ */
 export function cardImage(theme: Theme, file: string, side: 'front' | 'back', standalone = false): string {
   if (standalone) return `<span class="single-card-image">
       <img src="${asset(file)}" alt="" draggable="false">
@@ -12,6 +20,13 @@ export function cardImage(theme: Theme, file: string, side: 'front' | 'back', st
       </span>`;
 }
 
+/**
+ * Render motif face.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param value - Motif name in the selected theme.
+ * @returns HTML markup for this interface element.
+ */
 export function motifFace(theme: Theme, value: string): string {
   const motif = themes[theme].motifs.find(item => item.name === value);
   return theme === 'gaming' && value === 'Kreis' ? `<span class="gaming-circle">${cardImage(theme, 'Property 1=Component 2.png', 'front', true)}<img class="matched-circle" src="${asset('Match card.png')}" alt="">
@@ -21,6 +36,12 @@ export function motifFace(theme: Theme, value: string): string {
       </span>`;
 }
 
+/**
+ * Render theme options markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @returns HTML markup for this interface element.
+ */
 export function themeOptionsMarkup(theme: Theme): string {
   return `<fieldset>
       <legend class="theme-legend">
@@ -38,14 +59,26 @@ export function themeOptionsMarkup(theme: Theme): string {
       </fieldset>`;
 }
 
-export function playerOptionsMarkup(firstPlayer: Player): string {
+/**
+ * Render player options markup.
+ *
+ * @param firstPlayer - Starting player; null indicates no selection.
+ * @returns HTML markup for this interface element.
+ */
+export function playerOptionsMarkup(firstPlayer: Player | null): string {
   return `<fieldset>
       <legend>
-      <span class="player-icon" aria-hidden="true">${playerPawn(firstPlayer)}</span> Choose player</legend>${([0, 1] as const).map(value => `<label class="radio-option">
+      <span class="player-icon" aria-hidden="true">${playerPawn(firstPlayer ?? 0)}</span> Choose player</legend>${([0, 1] as const).map(value => `<label class="radio-option">
       <input type="radio" name="player" value="${value}" ${firstPlayer === value ? 'checked' : ''}>${value === 0 ? 'Blue' : 'Orange'}</label>`).join('')}</fieldset>`;
 }
 
-export function boardOptionsMarkup(size: BoardSize): string {
+/**
+ * Render board options markup.
+ *
+ * @param size - Board card count; null indicates no selection in settings.
+ * @returns HTML markup for this interface element.
+ */
+export function boardOptionsMarkup(size: BoardSize | null): string {
   return `<fieldset>
       <legend class="board-legend">
       <img class="board-size-icon" src="${asset('style.png')}" alt=""> Board size</legend>${([16, 24, 36] as const).map(value => `<label class="radio-option">
@@ -54,22 +87,52 @@ export function boardOptionsMarkup(size: BoardSize): string {
       </label>`).join('')}</fieldset>`;
 }
 
+/**
+ * Render player pawn.
+ *
+ * @param value - Player index: 0 for blue, 1 for orange.
+ * @returns HTML markup for this interface element.
+ */
 export function playerPawn(value: Player): string {
   return `<img class="player-pawn ${value === 0 ? 'blue' : 'orange'}" src="${asset('Player.png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
 }
 
+/**
+ * Render current player markup.
+ *
+ * @param value - Player index: 0 for blue, 1 for orange.
+ * @returns HTML markup for this interface element.
+ */
 export function currentPlayerMarkup(value: Player): string {
   return `<span class="game-current-player-label">Current player:</span><img class="game-player-label" src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
 }
 
+/**
+ * Render exit markup.
+ *
+ * @returns HTML markup for this interface element.
+ */
 export function exitMarkup(): string {
   return `<img class="game-exit-icon" src="${asset('move_item.png')}" alt=""><span class="game-exit-label">Exit game</span>`;
 }
 
+/**
+ * Render score player label.
+ *
+ * @param value - Player index: 0 for blue, 1 for orange.
+ * @returns HTML markup for this interface element.
+ */
 export function scorePlayerLabel(value: Player): string {
   return `<span class="score-name ${value === 0 ? 'blue' : 'orange'}-text">${value === 0 ? 'Blue' : 'Orange'}</span>`;
 }
 
+/**
+ * Render score markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param scores - Pair counts indexed by player, blue first and orange second.
+ * @returns HTML markup for this interface element.
+ */
 export function scoreMarkup(theme: Theme, scores: number[]): string {
   if (theme === 'coding') return `<span class="png-scoreboard">
       ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
@@ -77,18 +140,34 @@ export function scoreMarkup(theme: Theme, scores: number[]): string {
   return `<span class="text-scoreboard">${([0, 1] as const).map(value => `<span class="final-player-score">${scorePlayerLabel(value)}<strong class="${value === 0 ? 'blue' : 'orange'}-text" aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}</span>`;
 }
 
-/** Compact settings toolbar, separate from the full game toolbar. */
+/**
+ * Render preview scores markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @returns HTML markup for this interface element.
+ */
 export function previewScoresMarkup(theme: Theme): string {
   if (theme !== 'gaming') return scoreMarkup(theme, [0, 0]);
   return ([1, 0] as const).map(value => `<span class="preview-player-score ${value === 0 ? 'blue' : 'orange'}-text">${playerPawn(value)}<strong>${value === 0 ? 2 : 6}</strong></span>`).join('');
 }
 
+/**
+ * Render preview current player markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param value - Player index: 0 for blue, 1 for orange.
+ * @returns HTML markup for this interface element.
+ */
 export function previewCurrentPlayerMarkup(theme: Theme, value: Player): string {
   if (theme !== 'gaming') return currentPlayerMarkup(value);
   return `<span class="settings-current-player-label">Current player:</span><span class="gaming-current-pawn ${value === 0 ? 'blue' : 'orange'}">${playerPawn(value)}</span>`;
 }
 
-/** Markup for the home screen. */
+/**
+ * Render home markup.
+ *
+ * @returns HTML markup for this interface element.
+ */
 export function homeMarkup(): string {
   return `<section class="home-screen">
       <div class="home-content">
@@ -109,8 +188,15 @@ export function homeMarkup(): string {
       </section>`;
 }
 
-/** Markup for the settings screen. */
-export function settingsMarkup(theme: Theme, firstPlayer: Player, size: BoardSize): string {
+/**
+ * Render settings markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param firstPlayer - Starting player; null indicates no selection.
+ * @param size - Board card count; null indicates no selection in settings.
+ * @returns HTML markup for this interface element.
+ */
+export function settingsMarkup(theme: Theme, firstPlayer: Player | null, size: BoardSize | null): string {
   return `<section class="settings">
       <h1>
       Settings
@@ -125,7 +211,7 @@ export function settingsMarkup(theme: Theme, firstPlayer: Player, size: BoardSiz
       <section class="settings-preview" aria-label="Vorschau des gewählten Themes">
       <div class="preview-bar">
       <span class="mini-scores">${previewScoresMarkup(theme)}</span>
-      <span class="current-player">${previewCurrentPlayerMarkup(theme, firstPlayer)}</span>
+      <span class="current-player">${previewCurrentPlayerMarkup(theme, firstPlayer ?? 0)}</span>
       <button type="button" class="preview-exit" id="settings-exit"><img class="settings-exit-icon" src="${asset('move_item.png')}" alt=""><span class="settings-exit-label">Exit game</span></button>
       </div>
       <div class="preview-cards">
@@ -140,15 +226,15 @@ export function settingsMarkup(theme: Theme, firstPlayer: Player, size: BoardSiz
       </i>
       <span>
       <span class="summary-label">Player</span>
-      <strong>${firstPlayer === 0 ? 'Blue' : 'Orange'}</strong>
+      <strong>${firstPlayer === null ? 'Choose player' : firstPlayer === 0 ? 'Blue' : 'Orange'}</strong>
       </span>
       <i>
       </i>
       <span>
       <span class="summary-label">Board size</span>
-      <strong>${size} cards</strong>
+      <strong>${size === null ? 'Choose board size' : `${size} cards`}</strong>
       </span>
-      <button class="primary settings-start" id="play" aria-label="Start">
+      <button class="primary settings-start" id="play" aria-label="Start" ${firstPlayer === null || size === null ? 'disabled' : ''}>
       <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
       <img class="start-label" src="${asset('Start.png')}" alt="" draggable="false">
       </button>
@@ -159,10 +245,17 @@ export function settingsMarkup(theme: Theme, firstPlayer: Player, size: BoardSiz
       </section>`;
 }
 
-/** Markup for the game screen. */
+/**
+ * Render game markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param size - Board card count; null indicates no selection in settings.
+ * @param cards - Shuffled deck in board order.
+ * @returns HTML markup for this interface element.
+ */
 export function gameMarkup(theme: Theme, size: BoardSize, cards: Card[]): string {
   return `<section class="game">
-      <h1 class="game-title">${themes[theme].name} Memory – ${size} Karten</h1>
+      <h1 class="game-title sr-only">${themes[theme].name} Memory – ${size} Karten</h1>
       <header class="game-toolbar" aria-label="Spielstand und Spielsteuerung">
       <div class="scoreboard" aria-live="polite">
       </div>
@@ -190,7 +283,13 @@ export function gameMarkup(theme: Theme, size: BoardSize, cards: Card[]): string
       </section>`;
 }
 
-/** Markup for the result screen. */
+/**
+ * Render result markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param scores - Pair counts indexed by player, blue first and orange second.
+ * @returns HTML markup for this interface element.
+ */
 export function resultMarkup(theme: Theme, scores: number[]): string {
   return `<section class="result game-over">
       <h1>
@@ -208,9 +307,17 @@ export function resultMarkup(theme: Theme, scores: number[]): string {
       </section>`;
 }
 
-/** Markup for the winner screen. */
+/**
+ * Render winner markup.
+ *
+ * @param theme - Theme whose artwork should be rendered.
+ * @param draw - Whether both scores are equal.
+ * @param color - Winning player color.
+ * @param winner - Accessible announcement of the outcome.
+ * @returns HTML markup for this interface element.
+ */
 export function winnerMarkup(theme: Theme, draw: boolean, color: string, winner: string): string {
-  return `<section class="result winner-screen">${theme === 'gaming' || draw ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="">`}<p class="winner-kicker">
+  return `<section class="result winner-screen">${draw ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="" aria-hidden="true">`}<p class="winner-kicker">
       <img src="${asset(draw ? 'It’s a.png' : 'The winner is.png')}" alt="${draw ? "It's a" : 'The winner is'}">
       </p><h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
       ${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}
