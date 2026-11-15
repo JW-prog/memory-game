@@ -29,8 +29,7 @@ export function cardImage(theme: Theme, file: string, side: 'front' | 'back', st
  */
 export function motifFace(theme: Theme, value: string): string {
   const motif = themes[theme].motifs.find(item => item.name === value);
-  return theme === 'gaming' && value === 'Kreis' ? `<span class="gaming-circle">${cardImage(theme, 'Property 1=Component 2.png', 'front', true)}<img class="matched-circle" src="${asset('Match card.png')}" alt="">
-      </span>` : motif?.file ? cardImage(theme, motif.file, 'front', motif.standalone) : `<span class="placeholder-motif">
+  return motif?.file ? cardImage(theme, motif.file, 'front', motif.standalone) : `<span class="placeholder-motif">
       <strong>${value.replace('Motiv ', '')}</strong>
       <small>Platzhalter</small>
       </span>`;
@@ -98,7 +97,7 @@ export function playerPawn(value: Player): string {
  * @returns HTML markup for this interface element.
  */
 export function currentPlayerMarkup(value: Player): string {
-  return `<span class="game-current-player-label">Current player:</span><img class="game-player-label" src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
+  return `<span class="game-current-player-label">Current player:</span><span class="game-player-name ${value === 0 ? 'blue' : 'orange'}-text">${value === 0 ? 'Blue' : 'Orange'}</span>`;
 }
 
 /**
@@ -107,7 +106,7 @@ export function currentPlayerMarkup(value: Player): string {
  * @returns HTML markup for this interface element.
  */
 export function exitMarkup(): string {
-  return `<img class="game-exit-icon" src="${asset('move_item.png')}" alt=""><span class="game-exit-label">Exit game</span>`;
+  return `<img class="game-exit-icon" src="${asset('move_item.svg')}" alt=""><span class="game-exit-label">Exit game</span>`;
 }
 
 /**
@@ -129,7 +128,7 @@ export function scorePlayerLabel(value: Player): string {
  */
 export function scoreMarkup(theme: Theme, scores: number[]): string {
   if (theme === 'coding') return `<span class="png-scoreboard">
-      ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img src="${asset(value === 0 ? 'label.png' : 'label (1).png')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
+      ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img src="${asset(value === 0 ? 'label.svg' : 'label (1).svg')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
       </span>`;
   return `<span class="text-scoreboard">${([0, 1] as const).map(value => `<span class="final-player-score">${scorePlayerLabel(value)}<strong class="${value === 0 ? 'blue' : 'orange'}-text" aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}</span>`;
 }
@@ -169,7 +168,7 @@ export function homeMarkup(): string {
       <h1>Ready to play?</h1>
       ${homePlayButtonMarkup()}
       </div>
-      <img class="controller home-controller" src="${asset('stadia_controller.png')}" alt="Spielcontroller" draggable="false">
+      <img class="controller home-controller" src="${asset('stadia_controller.svg')}" alt="Spielcontroller" draggable="false">
       </section>`;
 }
 
@@ -206,7 +205,7 @@ function settingsPreviewMarkup(theme: Theme, firstPlayer: Player | null): string
       <div class="preview-bar">
       <span class="mini-scores">${previewScoresMarkup(theme)}</span>
       <span class="current-player">${previewCurrentPlayerMarkup(theme, firstPlayer ?? 0)}</span>
-      <button type="button" class="preview-exit" id="settings-exit"><img class="settings-exit-icon" src="${asset('move_item.png')}" alt=""><span class="settings-exit-label">Exit game</span></button>
+      <button type="button" class="preview-exit" id="settings-exit"><img class="settings-exit-icon" src="${asset('move_item.svg')}" alt=""><span class="settings-exit-label">Exit game</span></button>
       </div>
       <div class="preview-cards">
       <div class="preview-back">${cardImage(theme, themes[theme].back, 'back', true)}</div>
@@ -301,14 +300,14 @@ export function resultMarkup(theme: Theme, scores: number[]): string {
  */
 export function winnerMarkup(theme: Theme, draw: boolean, color: string, winner: string): string {
   return `<section class="result winner-screen">${draw ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="" aria-hidden="true">`}<p class="winner-kicker">
-      <img src="${asset(draw ? 'It’s a.png' : 'The winner is.png')}" alt="${draw ? "It's a" : 'The winner is'}">
+      ${draw ? "It's a" : 'The winner is'}
       </p><h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
       ${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}
       </h1>
       <span class="winner-symbol ${draw ? 'draw-text' : color + '-text'}" aria-hidden="true">${draw ? `<span class="coding-draw-art" style="mask-image: url('${asset('Scale_Icon.png')}')"><img class="draw-symbol" src="${asset('Scale_Icon.png')}" alt=""></span>` : theme === 'gaming' ? `<img class="winner-trophy" src="${asset('pockal 1.png')}" alt="">` : playerPawn(color === 'blue' ? 0 : 1)}</span>
       <div class="winner-actions">
       <button class="winner-home-button result-home" id="back-to-start">
-      <img src="${asset(theme === 'gaming' ? 'result-home.png' : 'secondary button (2).png')}" alt="${theme === 'gaming' ? 'Home' : 'Back to start'}">
+      ${theme === 'gaming' ? 'Home' : 'Back to start'}
       </button></div>
       </section>`;
 }
@@ -334,12 +333,7 @@ function themeIconMarkup(): string {
  * @returns Decorative SVG markup for the Play button.
  */
 function playControllerMarkup(): string {
-  return `<svg class="home-play-controller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M7.5 5h9c2 0 3.1 1.2 3.6 3.2l1.5 7.6c.5 2.5-1.9 3.7-3.5 1.8L15.5 15h-7l-2.6 2.6c-1.6 1.9-4 .7-3.5-1.8l1.5-7.6C4.4 6.2 5.5 5 7.5 5Z"/>
-        <path d="M7.5 8v5M5 10.5h5"/>
-        <circle cx="16" cy="9" r=".6" fill="currentColor" stroke="none"/>
-        <circle cx="18" cy="11.5" r=".6" fill="currentColor" stroke="none"/>
-      </svg>`;
+  return `<img class="home-play-controller" src="${asset('stadia_controller.svg')}" alt="" draggable="false">`;
 }
 
 /**
@@ -351,7 +345,7 @@ function homePlayButtonMarkup(): string {
   return `<button class="primary image-button" id="start" aria-label="Play — zu den Einstellungen">
       ${playControllerMarkup()}
       <span class="home-play-label">Play</span>
-      <img class="home-play-arrow" src="${asset('Arrow 1.png')}" alt="" draggable="false">
+      <img class="home-play-arrow" src="${asset('Arrow 1.svg')}" alt="" draggable="false">
       </button>`;
 }
 
@@ -381,7 +375,7 @@ function settingsOptionsMarkup(theme: Theme, firstPlayer: Player | null, size: B
 function settingsStartButtonMarkup(firstPlayer: Player | null, size: BoardSize | null): string {
   return `<button class="primary settings-start" id="play" aria-label="Start" ${firstPlayer === null || size === null ? 'disabled' : ''}>
       <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
-      <img class="start-label" src="${asset('Start.png')}" alt="" draggable="false">
+      <span class="start-label">Start</span>
       </button>`;
 }
 

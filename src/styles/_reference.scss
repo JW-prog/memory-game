@@ -1,4 +1,56 @@
 /* Shared proportions visible in the supplied overview of both themes. */
+.home-content .image-button .home-play-controller {
+  aspect-ratio: 44 / 32;
+}
+
+.settings-summary .settings-start .start-label {
+  width: auto;
+  font: 700 20px/1 'Red Rose', sans-serif;
+  filter: none;
+}
+
+.game-player-name {
+  min-width: 6ch;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Reserve identical square faces throughout the flip animation. */
+body[data-theme='gaming'] .game .card,
+.settings-preview .preview-cards > div,
+body[data-theme='gaming'] .settings-preview .preview-cards > div {
+  aspect-ratio: 1;
+}
+
+.settings-preview .preview-cards > div,
+body[data-theme='gaming'] .settings-preview .preview-cards > div {
+  top: 14%;
+}
+
+body[data-theme='gaming'] .settings-preview .preview-back {
+  transform: rotate(-7deg);
+}
+
+body[data-theme='coding'] .settings-preview:hover .preview-front {
+  transform: rotate(9deg);
+}
+
+body[data-theme='coding'] .settings-preview:hover .preview-back {
+  transform: rotate(-6deg);
+}
+
+.winner-screen .winner-kicker {
+  font: 400 clamp(24px, 3vw, 40px)/1.2 'Red Rose', sans-serif;
+}
+
+body[data-theme] .winner-actions .result-home {
+  padding: 14px 20px;
+  border: 1px solid var(--accent);
+  background: rgb(135 235 215 / 20%);
+  color: inherit;
+  font: 700 20px/1.2 'Red Rose', sans-serif;
+}
+
 .game-title.sr-only {
   margin: -1px;
 }
