@@ -50,7 +50,7 @@ test('Every size and theme contains exactly two cards per motif', () => {
 
 test('Image paths preserve equals signs and the selected theme renders image cards', () => {
   const app = game();
-  assert.equal(app.run('asset("Property 1=Component 22 (1).png")'), '/projects/memory-game/assets/Property%201=Component%2022%20(1).png');
+  assert.equal(app.run('asset("vector-Property 1=Component 22 (1).svg")'), '/projects/memory-game/assets/vector-Property%201=Component%2022%20(1).svg');
   for (const theme of ['coding', 'gaming']) {
     app.run(`theme = '${theme}'; startGame()`);
     const html = app.run('root.innerHTML');

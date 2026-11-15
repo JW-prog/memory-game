@@ -64,7 +64,7 @@ The feedback changes were also checked in headless Chrome at widths of 320, 390,
 
 ### Artwork
 
-Original exports remain in `public/assets`. The `vector-` derivatives provide square card canvases, cleaned Code vibes logos, and SVG interface symbols and backgrounds. Hidden raster layers were removed from the Code vibes logos without changing the exported vector paths. Gaming card faces retain their original embedded bitmap motifs to preserve the supplied artwork; the square backgrounds and card backs are vectors. Fully sharp Gaming motifs still require genuine vector exports of those motifs from the design source. The PNG favicon is intentional.
+`public/assets` contains the artwork used by the app; unused PNG and SVG exports have been removed. The `vector-` derivatives provide square card canvases, cleaned Code vibes logos, and SVG interface symbols and backgrounds. Hidden raster layers were removed from the Code vibes logos without changing the exported vector paths. Gaming card faces retain their original embedded bitmap motifs to preserve the supplied artwork; the square backgrounds and card backs are vectors. Fully sharp Gaming motifs still require genuine vector exports of those motifs from the design source. The PNG favicon is intentional.
 
 ## Contribution conventions
 
