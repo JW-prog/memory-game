@@ -37,7 +37,7 @@ Exit game opens a confirmation dialog. Returning preserves the round; confirming
 - Native radio controls, keyboard focus management and screen-reader announcements.
 - One main heading per screen (visually hidden on the game board); fieldsets and legends group settings, and the confirmation dialog uses a second-level heading.
 - Text sizes of at least 16 pixels, with wrapping for narrow settings previews.
-- Equal preview proportions (460:412) for both themes, square card faces, and fixed preview positions on hover.
+- Equal preview proportions (460:412) for both themes, square game card faces, and fixed preview positions on hover. The Gaming settings preview uses portrait artwork to match the supplied reference.
 - Temporary theme previews on hover and keyboard focus, without changing the committed choice.
 - Reduced-motion preferences respected by animations and transitions.
 

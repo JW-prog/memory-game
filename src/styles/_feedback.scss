@@ -14,15 +14,16 @@ body[data-theme] .settings-preview {
 
 body[data-theme] .settings-preview .preview-bar {
   display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: 36px;
+  grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
+  grid-template-rows: 44px;
   align-content: start;
   align-items: center;
   justify-content: space-between;
-  min-height: 0;
-  height: 80px;
+  min-height: 44px;
+  height: auto;
+  align-self: start;
   gap: 8px;
-  padding: 0;
+  padding: 10px;
 }
 
 body[data-theme] .settings-preview .mini-scores {
@@ -32,16 +33,38 @@ body[data-theme] .settings-preview .mini-scores {
 }
 
 body[data-theme] .settings-preview .current-player {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) 18px;
+  align-items: center;
   grid-column: 2;
   grid-row: 1;
   flex-wrap: nowrap;
   white-space: nowrap;
-  justify-content: flex-start;
+  justify-content: center;
+  justify-self: center;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  gap: 8px;
+}
+
+body[data-theme] .settings-preview .current-player .settings-current-player-label {
+  min-width: 0;
+  font: 700 16px/18px 'Red Rose', sans-serif;
+}
+
+body[data-theme] .settings-preview .current-player .preview-current-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
 }
 
 body[data-theme] .settings-preview .preview-exit {
   grid-column: 3;
   grid-row: 1;
+  justify-self: end;
 }
 
 body[data-theme] .settings-preview .preview-cards {
@@ -52,27 +75,78 @@ body[data-theme] .settings-preview .preview-cards {
 }
 
 body[data-theme] .settings-preview .preview-cards > div {
-  width: 44%;
+  width: 42%;
   aspect-ratio: 1;
-  top: 14%;
+  top: 18%;
   animation: none;
   transition: none;
   filter: none;
+  transform-origin: center;
+  box-shadow: 5px 7px 9px #0004;
 }
 
 body[data-theme] .settings-preview .preview-back,
 body[data-theme] .settings-preview:hover .preview-back {
-  left: 9%;
-  transform: rotate(-7deg);
+  left: 12%;
+  z-index: 2;
+  transform: rotate(-5.5deg);
 }
 
 body[data-theme] .settings-preview .preview-front,
 body[data-theme] .settings-preview:hover .preview-front {
-  right: 7%;
-  transform: rotate(9deg);
+  right: 14%;
+  z-index: 1;
+  transform: rotate(11deg);
 }
 
-@container (max-width: 500px) {
+body[data-theme] .settings-preview .preview-cards > .preview-front {
+  top: 30%;
+}
+
+body[data-theme='coding'] .settings-preview {
+  background: linear-gradient(35deg, #494b49, #303232 72%);
+}
+
+body[data-theme='gaming'] .settings-preview {
+  background: linear-gradient(35deg, #2089ae, #286780 38%, #274e5d 85%);
+}
+
+body[data-theme='gaming'] .settings-preview .preview-bar {
+  border-radius: 14px;
+  background: #59657d;
+  box-shadow: 0 5px 12px #142e404d;
+}
+
+body[data-theme='gaming'] .settings-preview .preview-cards > div {
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* Portrait artwork extends a fixed square slot, keeping hover layout stable. */
+body[data-theme='gaming'] .settings-preview .single-card-image {
+  position: absolute;
+  left: 2.380952%;
+  width: 95.238095%;
+  height: 119.047619%;
+  border-radius: 12px;
+  box-shadow: 5px 7px 9px #0004;
+}
+
+body[data-theme='gaming'] .settings-preview .preview-back,
+body[data-theme='gaming'] .settings-preview:hover .preview-back {
+  transform: translateY(-3.5%) rotate(-7deg);
+}
+
+body[data-theme='gaming'] .settings-preview .preview-front,
+body[data-theme='gaming'] .settings-preview:hover .preview-front {
+  transform: translate(4.76%, -14%) rotate(6deg);
+}
+
+body[data-theme='coding'] .settings-preview .preview-bar {
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+}
+
+@container (max-width: 548px) {
   body[data-theme] .settings-preview .preview-bar {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: 36px 36px;
@@ -86,11 +160,32 @@ body[data-theme] .settings-preview:hover .preview-front {
     grid-column: 1;
     grid-row: 2;
     white-space: normal;
+    height: 36px;
   }
 
   body[data-theme] .settings-preview .preview-exit {
     grid-column: 2;
     grid-row: 2;
+  }
+}
+
+@container (max-width: 420px) {
+  body[data-theme] .settings-preview .preview-cards > .preview-back {
+    top: 5%;
+  }
+
+  body[data-theme] .settings-preview .preview-cards > .preview-front {
+    top: 15%;
+  }
+
+  body[data-theme='gaming'] .settings-preview .preview-back,
+  body[data-theme='gaming'] .settings-preview:hover .preview-back {
+    transform: rotate(-7deg);
+  }
+
+  body[data-theme='gaming'] .settings-preview .preview-front,
+  body[data-theme='gaming'] .settings-preview:hover .preview-front {
+    transform: translateX(4.76%) rotate(6deg);
   }
 }
 

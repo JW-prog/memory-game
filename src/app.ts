@@ -2,7 +2,7 @@
 import { themes } from './themes';
 import {
   homeMarkup, settingsMarkup, gameMarkup, resultMarkup, winnerMarkup,
-  cardImage, motifFace, currentPlayerMarkup, scoreMarkup,
+  previewCardImage, currentPlayerMarkup, scoreMarkup,
   previewScoresMarkup, previewCurrentPlayerMarkup,
 } from './templates';
 
@@ -114,9 +114,8 @@ function refreshSettings(previewTheme: Theme = theme): void {
 function refreshPreview(previewTheme: Theme): void {
   const back = root.querySelector<HTMLElement>('.preview-back');
   const front = root.querySelector<HTMLElement>('.preview-front');
-  const sample = themes[previewTheme].motifs[previewTheme === 'gaming' ? 6 : 0];
-  if (back) back.innerHTML = cardImage(previewTheme, themes[previewTheme].back, 'back', true);
-  if (front) front.innerHTML = motifFace(previewTheme, sample.name);
+  if (back) back.innerHTML = previewCardImage(previewTheme, 'back');
+  if (front) front.innerHTML = previewCardImage(previewTheme, 'front');
   const miniScores = root.querySelector<HTMLElement>('.mini-scores');
   if (miniScores) miniScores.innerHTML = previewScoresMarkup(previewTheme);
   const current = root.querySelector<HTMLElement>('.preview-bar .current-player');

@@ -35,6 +35,14 @@ export function motifFace(theme: Theme, value: string): string {
       </span>`;
 }
 
+/** Render the reference preview artwork independently of square game cards. */
+export function previewCardImage(theme: Theme, side: 'front' | 'back'): string {
+  if (theme === 'gaming') return cardImage(theme, side === 'back' ? 'preview-gaming-back.svg' : 'preview-gaming-dice.svg', side, true);
+  return side === 'back'
+    ? cardImage(theme, 'preview-code-back.svg', side, true)
+    : motifFace(theme, themes[theme].motifs[0].name);
+}
+
 /**
  * Render theme options markup.
  *
@@ -154,8 +162,11 @@ export function previewScoresMarkup(theme: Theme): string {
  * @returns HTML markup for this interface element.
  */
 export function previewCurrentPlayerMarkup(theme: Theme, value: Player): string {
-  if (theme !== 'gaming') return currentPlayerMarkup(value);
-  return `<span class="settings-current-player-label">Current player:</span><span class="gaming-current-pawn ${value === 0 ? 'blue' : 'orange'}">${playerPawn(value)}</span>`;
+  const color = value === 0 ? 'blue' : 'orange';
+  const marker = theme === 'gaming'
+    ? playerPawn(value)
+    : `<img class="player-arrow" src="${asset(value === 0 ? 'Frame 563.svg' : 'label (2).svg')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
+  return `<span class="settings-current-player-label">Current player:</span><span class="preview-current-marker ${theme === 'gaming' ? 'gaming-current-pawn' : ''} ${color}">${marker}</span>`;
 }
 
 /**
@@ -210,8 +221,8 @@ function settingsPreviewMarkup(theme: Theme, firstPlayer: Player | null): string
       <button type="button" class="preview-exit" id="settings-exit"><img class="settings-exit-icon" src="${asset('move_item.svg')}" alt=""><span class="settings-exit-label">Exit game</span></button>
       </div>
       <div class="preview-cards">
-      <div class="preview-back">${cardImage(theme, themes[theme].back, 'back', true)}</div>
-      <div class="preview-front">${motifFace(theme, themes[theme].motifs[theme === 'gaming' ? 6 : 0].name)}</div>
+      <div class="preview-back">${previewCardImage(theme, 'back')}</div>
+      <div class="preview-front">${previewCardImage(theme, 'front')}</div>
       </div>
       </section>`;
 }
