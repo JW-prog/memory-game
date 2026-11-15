@@ -199,7 +199,7 @@ function updateBoard(): void {
 /** Update the current-player indicator and accessible round progress announcement. */
 function updateTurnStatus(): void {
   const currentPlayer = root.querySelector('.current-player');
-  if (currentPlayer) currentPlayer.innerHTML = currentPlayerMarkup(player);
+  if (currentPlayer) currentPlayer.innerHTML = currentPlayerMarkup(player, theme);
   const status = root.querySelector('.game-status');
   if (status) {
     status.textContent = `${player === 0 ? 'Blau' : 'Orange'} ist am Zug ? ${moves} Versuche ? `

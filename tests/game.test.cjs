@@ -257,3 +257,34 @@ test('Both themes celebrate wins with confetti and keep draws undecorated', () =
     }
   }
 });
+
+
+test('Gaming uses the active player pawn for every board size', () => {
+  const app = game();
+  for (const size of [16, 24, 36]) {
+    app.run("theme = 'gaming'; size = " + size + "; startGame();");
+    for (const player of [0, 1]) {
+      app.run('player = ' + player + '; updateTurnStatus();');
+      const html = app.run('root.querySelector(".current-player").innerHTML');
+      assert.ok(html.includes('player-pawn ' + (player === 0 ? 'blue' : 'orange')));
+      assert.ok(html.includes('alt="' + (player === 0 ? 'Blue' : 'Orange') + '"'));
+      assert.equal(html.includes('player-arrow'), false);
+    }
+  }
+  app.run("theme = 'coding'; startGame();");
+  assert.ok(app.run('root.querySelector(".current-player").innerHTML').includes('player-arrow'));
+});
+
+test('Code vibes cards contain real vectors and both themes use square card canvases', () => {
+  const app = game();
+  for (const theme of ['coding', 'gaming']) {
+    const files = app.run(`JSON.stringify([themes.${theme}.back, ...themes.${theme}.motifs.map(motif => motif.file)])`);
+    for (const file of JSON.parse(files)) {
+      const svg = fs.readFileSync(`public/assets/${file}`, 'utf8');
+      assert.match(svg, /viewBox="0 0 120 120"/, `${theme}: ${file}`);
+      if (theme === 'coding' || file === app.run('themes.gaming.back')) {
+        assert.doesNotMatch(svg, /<image\b|data:image/, `raster layer in ${file}`);
+      }
+    }
+  }
+});

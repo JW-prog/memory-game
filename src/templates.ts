@@ -47,7 +47,7 @@ export function themeOptionsMarkup(theme: Theme): string {
       ${themeIconMarkup()}Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
       <input type="radio" name="theme" value="${value}" ${theme === value ? 'checked' : ''}>
       <span class="theme-name">${themes[value].name} theme</span>
-      <img class="selected-theme-line" src="${asset('Line 3.png')}" alt="">
+      <img class="selected-theme-line" src="${asset('vector-selection-line.svg')}" alt="">
       </label>`).join('')}
       </fieldset>`;
 }
@@ -74,7 +74,7 @@ export function playerOptionsMarkup(firstPlayer: Player | null): string {
 export function boardOptionsMarkup(size: BoardSize | null): string {
   return `<fieldset>
       <legend class="board-legend">
-      <img class="board-size-icon" src="${asset('style.png')}" alt=""> Board size</legend>${([16, 24, 36] as const).map(value => `<label class="radio-option">
+      <img class="board-size-icon" src="${asset('vector-board-size.svg')}" alt=""> Board size</legend>${([16, 24, 36] as const).map(value => `<label class="radio-option">
       <input type="radio" name="size" value="${value}" ${size === value ? 'checked' : ''}>
       <span class="card-count-label">${value} cards</span>
       </label>`).join('')}</fieldset>`;
@@ -87,17 +87,19 @@ export function boardOptionsMarkup(size: BoardSize | null): string {
  * @returns HTML markup for this interface element.
  */
 export function playerPawn(value: Player): string {
-  return `<img class="player-pawn ${value === 0 ? 'blue' : 'orange'}" src="${asset('Player.png')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
+  return `<img class="player-pawn ${value === 0 ? 'blue' : 'orange'}" src="${asset('vector-player.svg')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
 }
 
 /**
  * Render current player markup.
  *
  * @param value - Player index: 0 for blue, 1 for orange.
+ * @param selectedTheme - Theme selecting a pawn or an arrow marker.
  * @returns HTML markup for this interface element.
  */
-export function currentPlayerMarkup(value: Player): string {
-  return `<span class="game-current-player-label">Current player:</span><span class="game-player-name ${value === 0 ? 'blue' : 'orange'}-text">${value === 0 ? 'Blue' : 'Orange'}</span>`;
+export function currentPlayerMarkup(value: Player, selectedTheme: Theme = 'coding'): string {
+  if (selectedTheme === 'gaming') return `<span class="game-current-player-label">Current player:</span><span class="gaming-current-pawn ${value === 0 ? 'blue' : 'orange'}">${playerPawn(value)}</span>`;
+  return `<span class="game-current-player-label">Current player:</span><span class="game-player-name ${value === 0 ? 'blue' : 'orange'}-text"><img class="player-arrow" src="${asset(value === 0 ? 'Frame 563.svg' : 'label (2).svg')}" alt=""><span class="sr-only">${value === 0 ? 'Blue' : 'Orange'}</span></span>`;
 }
 
 /**
@@ -128,7 +130,7 @@ export function scorePlayerLabel(value: Player): string {
  */
 export function scoreMarkup(theme: Theme, scores: number[]): string {
   if (theme === 'coding') return `<span class="png-scoreboard">
-      ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img src="${asset(value === 0 ? 'label.svg' : 'label (1).svg')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
+      ${([0, 1] as const).map(value => `<span class="score-entry ${value === 0 ? 'blue' : 'orange'}-text"><img class="player-arrow" src="${asset(value === 0 ? 'Frame 563.svg' : 'label (2).svg')}" alt=""><span>${value === 0 ? 'Blue' : 'Orange'}</span><strong aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}
       </span>`;
   return `<span class="text-scoreboard">${([0, 1] as const).map(value => `<span class="final-player-score">${scorePlayerLabel(value)}<strong class="${value === 0 ? 'blue' : 'orange'}-text" aria-label="${value === 0 ? 'Blue' : 'Orange'}: ${scores[value]} Paare">${scores[value]}</strong></span>`).join('')}</span>`;
 }
@@ -299,12 +301,12 @@ export function resultMarkup(theme: Theme, scores: number[]): string {
  * @returns HTML markup for this interface element.
  */
 export function winnerMarkup(theme: Theme, draw: boolean, color: string, winner: string): string {
-  return `<section class="result winner-screen">${draw ? '' : `<img class="confetti" src="${asset('Confetti (1).png')}" alt="" aria-hidden="true">`}<p class="winner-kicker">
+  return `<section class="result winner-screen">${draw ? '' : `<img class="confetti" src="${asset('vector-confetti.svg')}" alt="" aria-hidden="true">`}<p class="winner-kicker">
       ${draw ? "It's a" : 'The winner is'}
       </p><h1 class="${draw ? 'draw-text' : color + '-text'}" aria-label="${winner}">
       ${draw ? 'DRAW' : color === 'blue' ? 'Blue Player' : 'Orange Player'}
       </h1>
-      <span class="winner-symbol ${draw ? 'draw-text' : color + '-text'}" aria-hidden="true">${draw ? `<span class="coding-draw-art" style="mask-image: url('${asset('Scale_Icon.png')}')"><img class="draw-symbol" src="${asset('Scale_Icon.png')}" alt=""></span>` : theme === 'gaming' ? `<img class="winner-trophy" src="${asset('pockal 1.png')}" alt="">` : playerPawn(color === 'blue' ? 0 : 1)}</span>
+      <span class="winner-symbol ${draw ? 'draw-text' : color + '-text'}" aria-hidden="true">${draw ? `<span class="coding-draw-art" style="mask-image: url('${asset('vector-scale.svg')}')"><img class="draw-symbol" src="${asset('vector-scale.svg')}" alt=""></span>` : theme === 'gaming' ? `<img class="winner-trophy" src="${asset('vector-trophy.svg')}" alt="">` : playerPawn(color === 'blue' ? 0 : 1)}</span>
       <div class="winner-actions">
       <button class="winner-home-button result-home" id="back-to-start">
       ${theme === 'gaming' ? 'Home' : 'Back to start'}
@@ -374,7 +376,7 @@ function settingsOptionsMarkup(theme: Theme, firstPlayer: Player | null, size: B
  */
 function settingsStartButtonMarkup(firstPlayer: Player | null, size: BoardSize | null): string {
   return `<button class="primary settings-start" id="play" aria-label="Start" ${firstPlayer === null || size === null ? 'disabled' : ''}>
-      <img class="start-icon" src="${asset('smart_display.png')}" alt="" draggable="false">
+      <img class="start-icon" src="${asset('vector-smart-display.svg')}" alt="" draggable="false">
       <span class="start-label">Start</span>
       </button>`;
 }

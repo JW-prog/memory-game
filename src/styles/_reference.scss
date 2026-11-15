@@ -1,4 +1,81 @@
-/* Shared proportions visible in the supplied overview of both themes. */
+/* Code vibes toolbar follows the reference: scores, player marker, Exit game. */
+body[data-theme='gaming'] .game-toolbar .gaming-current-pawn {
+  width: 28px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+body[data-theme='gaming'] .game-toolbar .gaming-current-pawn .player-pawn {
+  display: block;
+  width: auto;
+  height: 22px;
+  filter: brightness(0) invert(1);
+}
+
+body[data-theme='coding'] .game-toolbar,
+body[data-theme='coding'] .settings-preview .preview-bar {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+body[data-theme='coding'] .game-toolbar .scoreboard,
+body[data-theme='coding'] .settings-preview .mini-scores {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+body[data-theme='coding'] .game-toolbar .current-player,
+body[data-theme='coding'] .settings-preview .current-player {
+  grid-column: 2;
+  grid-row: 1;
+  padding-top: 0;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+body[data-theme='coding'] .game-toolbar .exit-button,
+body[data-theme='coding'] .settings-preview .preview-exit {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+
+body[data-theme='coding'] .current-player .game-player-name {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  body[data-theme='coding'] .game-toolbar,
+  body[data-theme='coding'] .settings-preview .preview-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+
+  body[data-theme='coding'] .game-toolbar .scoreboard,
+  body[data-theme='coding'] .settings-preview .mini-scores {
+    grid-column: 1 / -1;
+  }
+
+  body[data-theme='coding'] .game-toolbar .current-player,
+  body[data-theme='coding'] .settings-preview .current-player {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: flex-start;
+    white-space: normal;
+    flex-wrap: wrap;
+  }
+
+  body[data-theme='coding'] .game-toolbar .exit-button,
+  body[data-theme='coding'] .settings-preview .preview-exit {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
 .home-content .image-button .home-play-controller {
   aspect-ratio: 44 / 32;
 }
@@ -10,9 +87,39 @@
 }
 
 .game-player-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   min-width: 6ch;
   font-size: 16px;
   font-weight: 700;
+}
+
+.player-arrow,
+.png-scoreboard .score-entry > .player-arrow,
+.settings-preview .score-entry > .player-arrow {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 15px;
+  height: 12px;
+  object-fit: contain;
+}
+
+/* Keep each marker close to its name and separate the two player scores. */
+body[data-theme='coding'] .png-scoreboard {
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+body[data-theme='coding'] .png-scoreboard .score-entry {
+  gap: 4px;
+  white-space: nowrap;
+}
+
+body[data-theme='coding'] .png-scoreboard .score-entry > .player-arrow {
+  display: inline-block;
+  width: 10px;
+  height: 8px;
 }
 
 /* Reserve identical square faces throughout the flip animation. */

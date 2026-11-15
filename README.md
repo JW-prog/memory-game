@@ -37,6 +37,7 @@ Exit game opens a confirmation dialog. Returning preserves the round; confirming
 - Native radio controls, keyboard focus management and screen-reader announcements.
 - One main heading per screen (visually hidden on the game board); fieldsets and legends group settings, and the confirmation dialog uses a second-level heading.
 - Text sizes of at least 16 pixels, with wrapping for narrow settings previews.
+- Equal preview proportions (460:412) for both themes, square card faces, and fixed preview positions on hover.
 - Temporary theme previews on hover and keyboard focus, without changing the committed choice.
 - Reduced-motion preferences respected by animations and transitions.
 
@@ -58,6 +59,12 @@ Exit game opens a confirmation dialog. Returning preserves the round; confirming
 `npm run build` performs strict TypeScript checking and builds the production site. `npm test` checks game behavior with a lightweight DOM simulation, including incomplete settings, both themes, scores, round timers and asset filename casing.
 
 The tests do not render a browser. Compare all screens and responsive sizes with the original design before submission. The full mockup and course guidelines are not included in this repository, so exact visual agreement cannot be verified here.
+
+The feedback changes were also checked in headless Chrome at widths of 320, 390, 600, 768, 820, 1024 and 1440 pixels. Both themes keep equal preview dimensions and summary positions; their preview toolbars fit without horizontal overflow. All six combinations of theme and board size retain square card bounds while flipping.
+
+### Artwork
+
+Original exports remain in `public/assets`. The `vector-` derivatives provide square card canvases, cleaned Code vibes logos, and SVG interface symbols and backgrounds. Hidden raster layers were removed from the Code vibes logos without changing the exported vector paths. Gaming card faces retain their original embedded bitmap motifs to preserve the supplied artwork; the square backgrounds and card backs are vectors. Fully sharp Gaming motifs still require genuine vector exports of those motifs from the design source. The PNG favicon is intentional.
 
 ## Contribution conventions
 

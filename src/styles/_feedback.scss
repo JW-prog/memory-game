@@ -1,0 +1,154 @@
+/* Equal preview bounds and reserved toolbar space prevent theme-switch jumps. */
+.settings-visual {
+  container-type: inline-size;
+}
+
+body[data-theme] .settings-preview {
+  display: grid;
+  grid-template-rows: 80px minmax(0, 1fr);
+  width: 100%;
+  aspect-ratio: 460 / 412;
+  min-height: 0;
+  padding: 16px;
+}
+
+body[data-theme] .settings-preview .preview-bar {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: 36px;
+  align-content: start;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 0;
+  height: 80px;
+  gap: 8px;
+  padding: 0;
+}
+
+body[data-theme] .settings-preview .mini-scores {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+body[data-theme] .settings-preview .current-player {
+  grid-column: 2;
+  grid-row: 1;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  justify-content: flex-start;
+}
+
+body[data-theme] .settings-preview .preview-exit {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+body[data-theme] .settings-preview .preview-cards {
+  min-height: 0;
+  height: 100%;
+  aspect-ratio: auto;
+  margin-top: 0;
+}
+
+body[data-theme] .settings-preview .preview-cards > div {
+  width: 44%;
+  aspect-ratio: 1;
+  top: 14%;
+  animation: none;
+  transition: none;
+  filter: none;
+}
+
+body[data-theme] .settings-preview .preview-back,
+body[data-theme] .settings-preview:hover .preview-back {
+  left: 9%;
+  transform: rotate(-7deg);
+}
+
+body[data-theme] .settings-preview .preview-front,
+body[data-theme] .settings-preview:hover .preview-front {
+  right: 7%;
+  transform: rotate(9deg);
+}
+
+@container (max-width: 500px) {
+  body[data-theme] .settings-preview .preview-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 36px 36px;
+  }
+
+  body[data-theme] .settings-preview .mini-scores {
+    grid-column: 1 / -1;
+  }
+
+  body[data-theme] .settings-preview .current-player {
+    grid-column: 1;
+    grid-row: 2;
+    white-space: normal;
+  }
+
+  body[data-theme] .settings-preview .preview-exit {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+/* Both exported faces now use a square canvas, with no raster drop shadows. */
+body[data-theme] .game .card {
+  aspect-ratio: 1;
+}
+
+body[data-theme='gaming'] .game .card,
+body[data-theme='gaming'] .preview-cards > div {
+  border-radius: 12px;
+}
+
+.card-back, .card-front {
+  overflow: hidden;
+}
+
+/* Keep the original controller export crisp, including its decorative color. */
+.home-controller,
+.home-controller:hover {
+  filter: brightness(0) saturate(100%) invert(66%) sepia(69%) saturate(1583%) hue-rotate(170deg) brightness(101%) contrast(98%);
+}
+
+@media (max-width: 750px) {
+  body[data-theme] .game-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px 8px;
+  }
+
+  body[data-theme] .game-toolbar .scoreboard {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  body[data-theme] .game-toolbar .current-player {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+    padding-top: 0;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    white-space: normal;
+  }
+
+  body[data-theme] .game-toolbar .game-current-player-label {
+    min-width: 0;
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  body[data-theme] .game-toolbar .exit-button {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 32px;
+    padding: 6px 8px;
+  }
+
+  body[data-theme] .game-toolbar .game-exit-label {
+    font-size: 16px;
+  }
+}
