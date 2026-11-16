@@ -48,6 +48,30 @@ test('Every size and theme contains exactly two cards per motif', () => {
   }
 });
 
+test('Different motif names never use identical artwork', () => {
+  const app = game();
+  for (const theme of ['coding', 'gaming']) {
+    const files = JSON.parse(app.run(`JSON.stringify(themes.${theme}.motifs.map(motif => motif.file))`));
+    const artwork = files.map(file => fs.readFileSync(`public/assets/${file}`, 'utf8'));
+    assert.equal(new Set(artwork).size, files.length, `${theme}: duplicated artwork`);
+  }
+});
+
+test('Gaming motifs preserve image proportions without repeating patterns', () => {
+  const app = game();
+  const files = JSON.parse(app.run('JSON.stringify(themes.gaming.motifs.map(motif => motif.file))'));
+  for (const file of files) {
+    const svg = fs.readFileSync(`public/assets/${file}`, 'utf8');
+    assert.match(svg, /preserveAspectRatio="xMidYMid meet"/, file);
+    assert.doesNotMatch(svg, /<pattern\b|<use\b/, file);
+  }
+});
+
+test('All settings choices use the same selection marker', () => {
+  const html = game().run('settingsMarkup("coding", 0, 16)');
+  assert.equal((html.match(/class="selected-theme-line"/g) || []).length, 7);
+});
+
 test('Image paths preserve equals signs and the selected theme renders image cards', () => {
   const app = game();
   assert.equal(app.run('asset("vector-Property 1=Component 22 (1).svg")'), '/projects/memory-game/assets/vector-Property%201=Component%2022%20(1).svg');

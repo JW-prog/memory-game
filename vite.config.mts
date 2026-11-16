@@ -4,7 +4,7 @@ export default defineConfig({
   base: "./",
   server: {
     watch: {
-      ignored: ['**/.tmp/**'],
+      ignored: [/(?:^|[\/])\.tmp(?:[\/]|$)/],
     },
   },
 });

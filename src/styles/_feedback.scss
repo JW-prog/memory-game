@@ -1,3 +1,25 @@
+/* Use the design's selection marker consistently in all three groups. */
+.settings-options .radio-option {
+  font-size: 20px;
+}
+
+.settings-options .radio-option .card-count-label {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.settings-options .radio-option::after {
+  display: none;
+}
+
+.settings-options .radio-option .selected-theme-line {
+  margin-left: auto;
+}
+
+.settings-options .radio-option:focus-within .selected-theme-line {
+  visibility: visible;
+}
+
 /* Equal preview bounds and reserved toolbar space prevent theme-switch jumps. */
 .settings-visual {
   container-type: inline-size;

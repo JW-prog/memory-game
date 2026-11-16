@@ -55,7 +55,7 @@ export function themeOptionsMarkup(theme: Theme): string {
       ${themeIconMarkup()}Game themes</legend>${(Object.keys(themes) as Theme[]).map(value => `<label class="radio-option">
       <input type="radio" name="theme" value="${value}" ${theme === value ? 'checked' : ''}>
       <span class="theme-name">${themes[value].name} theme</span>
-      <img class="selected-theme-line" src="${asset('vector-selection-line.svg')}" alt="">
+      ${selectionLineMarkup()}
       </label>`).join('')}
       </fieldset>`;
 }
@@ -70,7 +70,7 @@ export function playerOptionsMarkup(firstPlayer: Player | null): string {
   return `<fieldset>
       <legend>
       <span class="player-icon" aria-hidden="true">${playerPawn(firstPlayer ?? 0)}</span> Choose player</legend>${([0, 1] as const).map(value => `<label class="radio-option">
-      <input type="radio" name="player" value="${value}" ${firstPlayer === value ? 'checked' : ''}>${value === 0 ? 'Blue' : 'Orange'}</label>`).join('')}</fieldset>`;
+      <input type="radio" name="player" value="${value}" ${firstPlayer === value ? 'checked' : ''}><span>${value === 0 ? 'Blue' : 'Orange'}</span>${selectionLineMarkup()}</label>`).join('')}</fieldset>`;
 }
 
 /**
@@ -85,6 +85,7 @@ export function boardOptionsMarkup(size: BoardSize | null): string {
       <img class="board-size-icon" src="${asset('vector-board-size.svg')}" alt=""> Board size</legend>${([16, 24, 36] as const).map(value => `<label class="radio-option">
       <input type="radio" name="size" value="${value}" ${size === value ? 'checked' : ''}>
       <span class="card-count-label">${value} cards</span>
+      ${selectionLineMarkup()}
       </label>`).join('')}</fieldset>`;
 }
 
@@ -96,6 +97,11 @@ export function boardOptionsMarkup(size: BoardSize | null): string {
  */
 export function playerPawn(value: Player): string {
   return `<img class="player-pawn ${value === 0 ? 'blue' : 'orange'}" src="${asset('vector-player.svg')}" alt="${value === 0 ? 'Blue' : 'Orange'}">`;
+}
+
+/** Shared selection marker for theme, player and board-size choices. */
+function selectionLineMarkup(): string {
+  return `<img class="selected-theme-line" src="${asset('vector-selection-line.svg')}" alt="">`;
 }
 
 /**
