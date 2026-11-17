@@ -26,7 +26,7 @@ function game(selected = true) {
     }
     return cardElements.get(id);
   }, querySelector() { return element; } }, window: { setTimeout(callback) { timers.push(callback); } } });
-  const source = ['types', 'assets', 'themes', 'templates', 'app']
+  const source = ['types', 'assets', 'themes', 'templates', 'deck', 'settings', 'screens', 'app']
     .map(name => fs.readFileSync(`src/${name}.ts`, 'utf8'))
     .join('\n')
     .replace(/^import [\s\S]*?;\r?$/gm, '')
